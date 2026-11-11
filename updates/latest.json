@@ -1,0 +1,8 @@
+{
+ "version": "27.2",
+ "notes": "Due nuovi sfondi viola, rosa e nero: EG Oceano Viola ed EG Oceano Notte.\n\n**Novita' di EMAGIAKU GLASS OS 27.2**\n\n- **EG Oceano Viola**: le onde di EG Oceano con cielo rosa, onde viola e fondo nero.\n- **EG Oceano Notte**: cielo nero e onde dal viola al rosa.\n- Li trovi in Glass Engine > Glass e aspetto, sia in **Sfondo** (desktop) sia in **Schermata di blocco**.\n",
+ "file": "emagiaku-glass-os-27.2.tar.gz",
+ "sha256": "ffe960b0cd486c9180f66650f6fd7c9100d16ae8dba29b9d1b586de8c31af6fa",
+ "size": 4553788,
+ "packages": []
+}
