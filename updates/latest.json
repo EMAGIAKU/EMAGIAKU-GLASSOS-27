@@ -1,8 +1,8 @@
 {
- "version": "27.4",
- "notes": "Nuove icone del profilo in stile glass ed EG Windows App per aprire i programmi di Windows.\n\n**Novita' di EMAGIAKU GLASS OS 27.4**\n\n- **EG Account**: scegli l'immagine del tuo profilo tra 768 icone EMAGIAKU (16 simboli tra cui la tua\n  iniziale, stella, corona, controller, fiamma... 16 colori e 3 stili, anche glass) oppure usa una tua foto.\n  La vedi nel menu e nella schermata della password. Lo trovi nel menu e in Glass Engine > Sistema.\n- **Schermata di accensione**: in Glass Engine > Glass e aspetto > *Schermata di blocco e di accensione*\n  lo sfondo scelto va anche sulla schermata con la password quando accendi il PC (casella gia' spuntata,\n  ti chiede la password). C'e' anche il pulsante per cambiare solo quella.\n- **EG Windows App**: apri i programmi fatti per Windows (.exe e .msi) con un doppio clic. La prima volta\n  scarica Bottles da Flathub (serve internet). Molti programmi e giochi funzionano, ma non tutti\n  (per esempio i giochi con anti-cheat).\n",
- "file": "emagiaku-glass-os-27.4.tar.gz",
- "sha256": "5bd4fef900e689128071441a6e50a5cf81c6c0515699f2f0c5a82d873ff63b2a",
- "size": 4563179,
+ "version": "27.5",
+ "notes": "Arriva l'Account EMAGIAKU: crea il tuo account con la tua email e verificala con una mail.\n\n**Novita' di EMAGIAKU GLASS OS 27.5**\n\n- **Account EMAGIAKU** (facoltativo): apri **EG Account** > *Account EMAGIAKU*, scrivi email e\n  password e premi *Crea account*. Ti arriva una **mail di verifica**: clicca il link e il tuo account e'\n  verificato. Se il link non si apre, copialo e incollalo nella casella *Codice o link dalla mail*.\n- **Password dimenticata**: ricevi una mail; puoi scegliere la nuova password dal link oppure incollare il\n  link in EG Account insieme alla nuova password. Puoi anche **eliminare l'account** quando vuoi.\n- Serve internet. Il servizio account e' fornito da Google (Firebase). Leggi l'informativa privacy:\n  https://github.com/EMAGIAKU/EMAGIAKU-GLASSOS-27/blob/main/PRIVACY.md\n",
+ "file": "emagiaku-glass-os-27.5.tar.gz",
+ "sha256": "51dd4e8e5d69c3c4857d358bcfc85167a8877ae456607b396fdd08fb26ce223e",
+ "size": 4567495,
  "packages": []
 }
