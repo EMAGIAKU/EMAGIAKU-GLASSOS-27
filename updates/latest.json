@@ -1,8 +1,8 @@
 {
- "version": "27.8",
- "notes": "Arrivano EG Files ed EG Console, WhatsApp e Claude nell'EG Store, e le impostazioni fanno tutto da sole.\n\n**Novita' di EMAGIAKU GLASS OS 27.8**\n\n- **EG Files**: il gestore dei file EMAGIAKU. Cartelle, chiavette USB, cestino (con *Ripristina*),\n  copia/taglia/incolla, rinomina, ricerca, vista a icone o elenco, **archivi .zip .rar .7z .tar**\n  (*Estrai qui* e *Comprimi in .zip*). Le cartelle ora si aprono con EG Files ed e' anche nel dock.\n- **EG Console**: il terminale EMAGIAKU, con schede, colori, copia/incolla (Ctrl+Maiusc+C / V) e\n  cronologia con la rotellina.\n- **WhatsApp e Claude nell'EG Store** (versione web ufficiale): *Ottieni* li mette nel menu con la loro\n  icona e si aprono in una finestra di Firefox.\n- **EG Impostazioni fa tutto da sola**, senza aprire altre finestre:\n  - Bluetooth: cerca, connetti e dimentica i dispositivi (e installa il supporto se manca);\n  - Audio: scegli casse, cuffie e microfono;\n  - Schermo: risoluzione, Hz e dimensione (100-200%);\n  - Rete: reti nascoste, hotspot, reti salvate e indirizzo IP;\n  - App: elenco delle app installate con *Disinstalla*;\n  - EG Update ed EG Windows App direttamente dentro;\n  - Avanzate: fuso orario, tastiera, energia e spegnimento schermo, app all'avvio, nome e password del PC.\n- **Account EMAGIAKU**: ora puoi cambiare **nome**, **email** (con conferma al nuovo indirizzo) e **password**.\n",
- "file": "emagiaku-glass-os-27.8.tar.gz",
- "sha256": "5ebac3e11f4f706e09ff92c174f20b77cbe972aab12b9fed078765ab66350a20",
- "size": 4907881,
+ "version": "27.9",
+ "notes": "Account EMAGIAKU piu' sicuro.\n\n**Novita' di EMAGIAKU GLASS OS 27.9**\n\n- **Ultimo accesso**: in EG Impostazioni > Account vedi quando e' stato creato l'account e l'ultimo accesso\n  con la password. Se non sei stato tu, cambia subito la password.\n- **Password piu' sicure**: almeno 8 caratteri con lettere e numeri; le password troppo facili\n  (es. \"12345678\", \"aaaa1111\") o con il tuo indirizzo email vengono rifiutate.\n- Quando cambi la password, l'account **si chiude su tutti gli altri PC**.\n",
+ "file": "emagiaku-glass-os-27.9.tar.gz",
+ "sha256": "a29faa2370a9d222af9d25b0720ec38cd7f27a95ce6f9737d666b256cf5e5a41",
+ "size": 4908582,
  "packages": []
 }
