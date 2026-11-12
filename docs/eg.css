@@ -1,0 +1,37 @@
+:root {
+  --bg: #120c1c; --card: #1d1430; --line: #3a2a60; --text: #ebe4fa; --muted: #a197b8;
+  --accent: #8a4fff; --accent2: #c9a4ff; --ok: #8affc1; --bad: #ff8aa0;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: radial-gradient(circle at 20% 0%, #2a1650 0, var(--bg) 55%) fixed, var(--bg);
+  color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  min-height: 100vh; display: flex; justify-content: center; padding: 24px 16px;
+}
+main { width: 100%; max-width: 460px; }
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.logo { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-weight: 900;
+        letter-spacing: -1px; color: #fff; background: linear-gradient(135deg, #8a4fff, #3b1c7a); }
+.brand b { display: block; font-size: 17px; }
+.brand span { color: var(--muted); font-size: 13px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px; margin-bottom: 14px; }
+h1 { font-size: 24px; margin: 0 0 6px; }
+h2 { font-size: 17px; margin: 0 0 8px; color: var(--accent2); }
+p { margin: 0 0 12px; color: var(--muted); }
+label { display: block; font-size: 14px; margin: 10px 0 4px; }
+input { width: 100%; padding: 13px 14px; border-radius: 12px; border: 1px solid var(--line); background: #140d22;
+        color: var(--text); font-size: 16px; }
+input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+button { width: 100%; margin-top: 12px; padding: 14px; border: 0; border-radius: 14px; font-size: 16px; font-weight: 800;
+         background: var(--accent); color: #fff; cursor: pointer; }
+button.alt { background: transparent; border: 1px solid var(--line); color: var(--text); font-weight: 600; }
+button:disabled { opacity: .6; }
+.msg { padding: 12px 14px; border-radius: 12px; margin-bottom: 14px; background: #241838; border: 1px solid var(--line); }
+.msg.ok { border-color: #2f7a55; color: var(--ok); }
+.msg.bad { border-color: #7a2f45; color: var(--bad); }
+.big { font-size: 52px; text-align: center; margin: 6px 0; }
+.small { font-size: 13px; color: var(--muted); }
+footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 18px; }
+a { color: var(--accent2); }

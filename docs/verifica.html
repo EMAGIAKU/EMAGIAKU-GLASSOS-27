@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Verifica email - EMAGIAKU</title>
+<link rel="stylesheet" href="eg.css">
+</head>
+<body>
+<main>
+  <div class="brand"><div class="logo">EG</div><div><b>Account EMAGIAKU</b><span>EMAGIAKU GLASS OS</span></div></div>
+  <div id="msg" class="msg" hidden></div>
+  <section class="card" id="ask">
+    <h1>Verifica la tua email</h1>
+    <p>Premi il pulsante per confermare che questa email e' tua.</p>
+    <button id="b_ok">Conferma la mia email</button>
+  </section>
+  <section class="card" id="done" hidden>
+    <div class="big">✅</div>
+    <h1>Email verificata!</h1>
+    <p>Torna su EMAGIAKU GLASS OS: in EG Impostazioni &gt; Account premi "Controlla" o riapri la pagina.</p>
+  </section>
+  <footer>EMAGIAKU GLASS OS · Developed by EMAGIAKU.TEAM<br>
+    <a href="https://github.com/EMAGIAKU/EMAGIAKU-GLASSOS-27/blob/main/PRIVACY.md">Privacy</a></footer>
+</main>
+<script src="eg.js"></script>
+<script>
+"use strict";
+const p = EG.params();
+const userId = p.get("userId") || "", secret = p.get("secret") || "";
+if (!userId || !secret) {
+  EG.show("ask", false);
+  EG.msg("Link incompleto: apri il link dall'ultima mail di verifica.", "bad");
+}
+EG.$("b_ok").onclick = async (ev) => {
+  EG.busy(ev.target, true);
+  try {
+    await EG.call("PUT", "/account/verification", { userId, secret });
+    EG.msg("");
+    EG.show("ask", false);
+    EG.show("done", true);
+    history.replaceState(null, "", location.pathname);   // il codice non resta nella barra
+  } catch (e) {
+    EG.msg(EG.niceError(e) + " Chiedi una nuova mail da EG Impostazioni > Account.", "bad");
+  } finally {
+    EG.busy(ev.target, false);
+  }
+};
+</script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 {
- "version": "27.10",
- "notes": "Arriva la verifica in due passaggi per l'Account EMAGIAKU.\n\n**Novita' di EMAGIAKU GLASS OS 27.10**\n\n- **Verifica in due passaggi** (EG Impostazioni > Account > Account EMAGIAKU): inquadri il codice QR con\n  un'app di autenticazione (Google Authenticator, Microsoft Authenticator, 2FAS...) e salvi i **codici di\n  recupero**. Da quel momento per entrare servono la password **e** il codice del telefono: con la sola\n  password l'account resta bloccato.\n- **Accedi con un codice via email**: senza password, ti arriva un codice di 6 cifre.\n- **Mail di avviso** a ogni nuovo accesso al tuo account.\n- Password ancora piu' sicure: vengono rifiutate anche le password comuni, quelle che contengono nome o email,\n  quelle usate di recente e quelle comparse in furti di dati.\n- **Importante:** l'Account EMAGIAKU e' passato a un nuovo servizio piu' sicuro (Appwrite, server in Europa).\n  Se avevi gia' un account, **crealo di nuovo** (stessa email va bene). Informativa privacy aggiornata.\n",
- "file": "emagiaku-glass-os-27.10.tar.gz",
- "sha256": "8caa4780ab07aa32998af4d98cb0b6a732eb019356301d790bb671d23db322fe",
- "size": 4911991,
+ "version": "27.11",
+ "notes": "Entra nel PC con il telefono: codice QR e passkey, come su Windows.\n\n**Novita' di EMAGIAKU GLASS OS 27.11**\n\n- **Accedi con il telefono** (EG Impostazioni > Account > Account EMAGIAKU): il PC mostra un codice QR,\n  lo inquadri con il telefono, sblocchi con impronta, volto o PIN e il PC entra da solo. Niente password.\n  La passkey resta sul telefono; il passaggio al PC e' cifrato e vale una volta sola.\n- **Passkey del telefono**: la prima volta la crei dal telefono (email e password); in Account vedi le tue\n  passkey e puoi eliminarle.\n- Le mail di verifica e di nuova password aprono una pagina EMAGIAKU che fa tutto da sola:\n  non serve piu' copiare il link.\n",
+ "file": "emagiaku-glass-os-27.11.tar.gz",
+ "sha256": "6ff3d2abf33f50b0bc63ee960b3cd2882bf3dbb17e4d2514dc6902240ca9a295",
+ "size": 4914258,
  "packages": []
 }

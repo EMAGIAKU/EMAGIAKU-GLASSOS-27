@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Accedi al PC - EMAGIAKU</title>
+<link rel="stylesheet" href="eg.css">
+</head>
+<body>
+<main>
+  <div class="brand"><div class="logo">EG</div><div><b>Account EMAGIAKU</b><span>EMAGIAKU GLASS OS</span></div></div>
+  <div id="msg" class="msg" hidden></div>
+
+  <!-- accesso al PC (aperto dal QR di EG Impostazioni) -->
+  <section id="login" class="card" hidden>
+    <div class="big">🔐</div>
+    <h1>Accedi al PC</h1>
+    <p>Sblocca la passkey EMAGIAKU di questo telefono (impronta, volto o PIN): il tuo PC entra da solo.</p>
+    <button id="b_login">Accedi con la passkey</button>
+    <button id="b_first" class="alt">Prima volta? Crea la passkey</button>
+  </section>
+
+  <!-- creazione della passkey -->
+  <section id="setup" class="card" hidden>
+    <h1>Crea la passkey</h1>
+    <p>Una volta sola: entra con il tuo Account EMAGIAKU e la passkey viene salvata su questo telefono.
+       Poi per entrare nel PC basta inquadrare il QR e sbloccare il telefono.</p>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" inputmode="email">
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <div id="mfa" hidden>
+      <label for="code">Codice della verifica in due passaggi (app) o codice di recupero</label>
+      <input id="code" inputmode="numeric" autocomplete="one-time-code">
+    </div>
+    <button id="b_setup">Entra e crea la passkey</button>
+    <button id="b_back" class="alt" hidden>Indietro</button>
+  </section>
+
+  <section id="done" class="card" hidden>
+    <div class="big">✅</div>
+    <h1 id="done_t">Fatto!</h1>
+    <p id="done_p">Guarda il PC: sta entrando nel tuo account.</p>
+  </section>
+
+  <section id="nossl" class="card" hidden>
+    <h1>Passkey non disponibili</h1>
+    <p>Questo browser non supporta le passkey. Aggiorna il telefono o apri la pagina con Chrome o Safari.</p>
+  </section>
+
+  <footer>EMAGIAKU GLASS OS · Developed by EMAGIAKU.TEAM<br>
+    <a href="https://github.com/EMAGIAKU/EMAGIAKU-GLASSOS-27/blob/main/PRIVACY.md">Privacy</a></footer>
+</main>
+<script src="eg.js"></script>
+<script>
+"use strict";
+const h = EG.hash();
+const ROW = (h.get("r") || "").replace(/[^a-f0-9]/g, "");
+const KEY = (h.get("k") || "").replace(/[^A-Za-z0-9_-]/g, "");
+const forPC = ROW.length === 32 && KEY.length >= 43;
+let needMfa = false;
+
+function view(which) {
+  ["login", "setup", "done", "nossl"].forEach((s) => EG.show(s, s === which));
+  EG.show("b_back", which === "setup" && forPC);
+}
+
+async function loginPC(btn) {
+  EG.msg("");
+  EG.busy(btn, true, "Sblocca il telefono...");
+  try {
+    const token = await EG.passkeyToken();
+    if (forPC) {
+      await EG.sendToPC(ROW, KEY, token);
+      view("done");
+    } else {
+      // pagina aperta senza QR: la passkey funziona, ma non c'e' un PC che aspetta
+      view("done");
+      EG.$("done_t").textContent = "La passkey funziona!";
+      EG.$("done_p").textContent = "Per entrare nel PC apri EG Impostazioni > Account > Accedi con il telefono e inquadra il QR.";
+    }
+  } catch (e) {
+    EG.msg(EG.niceError(e), "bad");
+    if (e && e.name === "NotAllowedError") EG.show("b_first", true);
+  } finally {
+    EG.busy(btn, false);
+  }
+}
+
+async function setup(btn) {
+  EG.msg("");
+  const email = EG.$("email").value.trim(), pw = EG.$("pw").value;
+  EG.busy(btn, true);
+  try {
+    if (!needMfa) {
+      await EG.logoutLocal();
+      try {
+        await EG.call("POST", "/account/sessions/email", { email, password: pw });
+        await EG.call("GET", "/account");
+      } catch (e) {
+        if (e.type !== "user_more_factors_required") throw e;
+        needMfa = true;
+        EG.show("mfa", true);
+        EG.$("code").focus();
+        EG.msg("Scrivi il codice dell'app di autenticazione.", "");
+        return;
+      }
+    } else {
+      const code = EG.$("code").value.replace(/\s/g, "");
+      const factor = /^\d{6}$/.test(code) ? "totp" : "recoveryCode";
+      const ch = await EG.call("POST", "/account/mfa/challenge", { factor });
+      await EG.call("PUT", "/account/mfa/challenge", { challengeId: ch.$id, otp: code });
+    }
+    EG.busy(btn, true, "Conferma sul telefono...");
+    await EG.createPasskey("Telefono " + new Date().toLocaleDateString("it-IT"));
+    await EG.logoutLocal();         // sul telefono non resta nessuna sessione aperta
+    EG.$("pw").value = "";
+    if (forPC) {
+      view("login");
+      EG.msg("Passkey creata ✔ Ora premi \"Accedi con la passkey\".", "ok");
+    } else {
+      view("done");
+      EG.$("done_t").textContent = "Passkey creata!";
+      EG.$("done_p").textContent = "Da ora per entrare nel PC: EG Impostazioni > Account > Accedi con il telefono, inquadra il QR e sblocca il telefono.";
+    }
+  } catch (e) {
+    EG.msg(EG.niceError(e), "bad");
+  } finally {
+    EG.busy(btn, false);
+  }
+}
+
+EG.$("b_login").onclick = (ev) => loginPC(ev.target);
+EG.$("b_first").onclick = () => { view("setup"); EG.$("email").focus(); };
+EG.$("b_back").onclick = () => view("login");
+EG.$("b_setup").onclick = (ev) => setup(ev.target);
+EG.$("code").addEventListener("keydown", (ev) => { if (ev.key === "Enter") setup(EG.$("b_setup")); });
+
+if (!EG.supportsPasskey()) view("nossl");
+else if (forPC) view("login");
+else view("setup");
+</script>
+</body>
+</html>
