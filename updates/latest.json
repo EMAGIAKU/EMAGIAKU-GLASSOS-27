@@ -1,8 +1,8 @@
 {
- "version": "27.14",
- "notes": "Arriva la pagina Utenti: piu' persone sullo stesso PC.\n\n**Novita' di EMAGIAKU GLASS OS 27.14**\n\n- **EG Impostazioni > Utenti**: vedi tutti gli account del PC (amministratori, utenti standard, ospite),\n  rendi una persona amministratore o togli i permessi, elimina un utente.\n- **Aggiungi utente**: scegli\n  - **Con un Account EMAGIAKU**: la persona accede (o crea) il suo Account EG; sul PC entra con la stessa\n    password e trova il suo account gia' collegato. Funziona anche con la verifica in due passaggi.\n  - **Come ospite**: entra senza password; a ogni riavvio del PC tutto quello che ha fatto viene cancellato.\n- Per aggiungere o eliminare utenti serve la password di un amministratore.\n",
- "file": "emagiaku-glass-os-27.14.tar.gz",
- "sha256": "d0ab4470618cd2379ef77f7796ac94578da9eec323d49881227abba8654c95f7",
- "size": 4924352,
+ "version": "27.15",
+ "notes": "Niente piu' impostazioni di KDE, e arriva la pagina Sfondo.\n\n**Novita' di EMAGIAKU GLASS OS 27.15**\n\n- **Sfondo** (EG Impostazioni > Sfondo): tutti gli sfondi EMAGIAKU con l'anteprima, oppure una tua immagine.\n  Scegli dove usarlo: desktop, schermata di blocco e schermata di accensione. C'e' anche il cambio\n  automatico ogni tot minuti.\n- **Impostazioni solo EMAGIAKU**: tutto quello che prima apriva le impostazioni di KDE (preferiti del menu,\n  pulsanti \"Configura...\" dell'audio, della rete, del Bluetooth, dello schermo...) ora apre la pagina giusta di\n  **EG Impostazioni**. Vale completamente dal prossimo accesso: dopo l'aggiornamento esci e rientra.\n",
+ "file": "emagiaku-glass-os-27.15.tar.gz",
+ "sha256": "d09f170f89d11884fe962df0ae8583cd9ccf7cc70e7b5c6f1cf8ec4759b6ebd4",
+ "size": 4928120,
  "packages": []
 }
