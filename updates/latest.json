@@ -1,8 +1,8 @@
 {
- "version": "27.7",
- "notes": "\"Attiva PRO / STUDY\" ora e' dentro EG Impostazioni.\n\n**Novita' di EMAGIAKU GLASS OS 27.7**\n\n- **Attiva PRO / STUDY** non e' piu' un'app nel menu: la trovi in **EG Impostazioni** (voce in giallo,\n  come \"Attiva Windows\"), con *Attiva una chiave* e *Acquista con PayPal*. Anche la pagina **Sistema**\n  ti ricorda di attivarla. Dopo l'attivazione la voce diventa **Edizione**.\n",
- "file": "emagiaku-glass-os-27.7.tar.gz",
- "sha256": "9f5b2d6387c67d2ae8ae97d3379dcc942257cc18d7ae6a25eade74ce00eb8814",
- "size": 4589851,
+ "version": "27.8",
+ "notes": "Arrivano EG Files ed EG Console, WhatsApp e Claude nell'EG Store, e le impostazioni fanno tutto da sole.\n\n**Novita' di EMAGIAKU GLASS OS 27.8**\n\n- **EG Files**: il gestore dei file EMAGIAKU. Cartelle, chiavette USB, cestino (con *Ripristina*),\n  copia/taglia/incolla, rinomina, ricerca, vista a icone o elenco, **archivi .zip .rar .7z .tar**\n  (*Estrai qui* e *Comprimi in .zip*). Le cartelle ora si aprono con EG Files ed e' anche nel dock.\n- **EG Console**: il terminale EMAGIAKU, con schede, colori, copia/incolla (Ctrl+Maiusc+C / V) e\n  cronologia con la rotellina.\n- **WhatsApp e Claude nell'EG Store** (versione web ufficiale): *Ottieni* li mette nel menu con la loro\n  icona e si aprono in una finestra di Firefox.\n- **EG Impostazioni fa tutto da sola**, senza aprire altre finestre:\n  - Bluetooth: cerca, connetti e dimentica i dispositivi (e installa il supporto se manca);\n  - Audio: scegli casse, cuffie e microfono;\n  - Schermo: risoluzione, Hz e dimensione (100-200%);\n  - Rete: reti nascoste, hotspot, reti salvate e indirizzo IP;\n  - App: elenco delle app installate con *Disinstalla*;\n  - EG Update ed EG Windows App direttamente dentro;\n  - Avanzate: fuso orario, tastiera, energia e spegnimento schermo, app all'avvio, nome e password del PC.\n- **Account EMAGIAKU**: ora puoi cambiare **nome**, **email** (con conferma al nuovo indirizzo) e **password**.\n",
+ "file": "emagiaku-glass-os-27.8.tar.gz",
+ "sha256": "5ebac3e11f4f706e09ff92c174f20b77cbe972aab12b9fed078765ab66350a20",
+ "size": 4907881,
  "packages": []
 }
