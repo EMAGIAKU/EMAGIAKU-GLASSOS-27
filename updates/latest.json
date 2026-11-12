@@ -1,8 +1,8 @@
 {
- "version": "27.13",
- "notes": "Corretto il bug degli schermi doppi.\n\n**Novita' di EMAGIAKU GLASS OS 27.13**\n\n- **Due schermi senza sovrapposizioni**: cambiando risoluzione o dimensione in EG Impostazioni > Schermo, il\n  secondo schermo finiva sotto al primo (si vedeva meta' di uno e meta' dell'altro). Ora dopo ogni modifica gli\n  schermi vengono rimessi uno accanto all'altro.\n- **Ripristina gli schermi**: un pulsante che rimette tutti gli schermi a posto (risoluzione consigliata,\n  dimensione 100%, uno accanto all'altro).\n- Estendi / Duplica / Solo PC / Solo TV usano ora lo stesso sistema delle impostazioni di KDE, cosi' la scelta\n  resta salvata.\n- La dimensione di testi e finestre (125%, 150%...) ora vale per tutti gli schermi insieme e si applica dal\n  prossimo accesso (con il sistema grafico in uso, quella per singolo schermo non e' supportata).\n",
- "file": "emagiaku-glass-os-27.13.tar.gz",
- "sha256": "d0e203ef7161c882c833403c0743de50ffba2247f9c4bd67ec55b46ad329cf10",
- "size": 4918462,
+ "version": "27.14",
+ "notes": "Arriva la pagina Utenti: piu' persone sullo stesso PC.\n\n**Novita' di EMAGIAKU GLASS OS 27.14**\n\n- **EG Impostazioni > Utenti**: vedi tutti gli account del PC (amministratori, utenti standard, ospite),\n  rendi una persona amministratore o togli i permessi, elimina un utente.\n- **Aggiungi utente**: scegli\n  - **Con un Account EMAGIAKU**: la persona accede (o crea) il suo Account EG; sul PC entra con la stessa\n    password e trova il suo account gia' collegato. Funziona anche con la verifica in due passaggi.\n  - **Come ospite**: entra senza password; a ogni riavvio del PC tutto quello che ha fatto viene cancellato.\n- Per aggiungere o eliminare utenti serve la password di un amministratore.\n",
+ "file": "emagiaku-glass-os-27.14.tar.gz",
+ "sha256": "d0ab4470618cd2379ef77f7796ac94578da9eec323d49881227abba8654c95f7",
+ "size": 4924352,
  "packages": []
 }
