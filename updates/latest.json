@@ -1,8 +1,8 @@
 {
- "version": "27.11",
- "notes": "Entra nel PC con il telefono: codice QR e passkey, come su Windows.\n\n**Novita' di EMAGIAKU GLASS OS 27.11**\n\n- **Accedi con il telefono** (EG Impostazioni > Account > Account EMAGIAKU): il PC mostra un codice QR,\n  lo inquadri con il telefono, sblocchi con impronta, volto o PIN e il PC entra da solo. Niente password.\n  La passkey resta sul telefono; il passaggio al PC e' cifrato e vale una volta sola.\n- **Passkey del telefono**: la prima volta la crei dal telefono (email e password); in Account vedi le tue\n  passkey e puoi eliminarle.\n- Le mail di verifica e di nuova password aprono una pagina EMAGIAKU che fa tutto da sola:\n  non serve piu' copiare il link.\n",
- "file": "emagiaku-glass-os-27.11.tar.gz",
- "sha256": "6ff3d2abf33f50b0bc63ee960b3cd2882bf3dbb17e4d2514dc6902240ca9a295",
- "size": 4914258,
+ "version": "27.12",
+ "notes": "La verifica dell'email ora si fa con un codice di 6 cifre.\n\n**Novita' di EMAGIAKU GLASS OS 27.12**\n\n- **Verifica l'email con un codice**: dopo aver creato l'account ti arriva una mail con un **codice di 6 cifre**\n  (vale 15 minuti, si usa una volta sola). Lo scrivi in EG Impostazioni > Account e l'email e' verificata.\n  Niente piu' link da copiare.\n- **Password dimenticata con un codice**: premi \"Password dimenticata\", ti arriva un codice di 6 cifre e lo\n  scrivi in Account insieme alla nuova password.\n",
+ "file": "emagiaku-glass-os-27.12.tar.gz",
+ "sha256": "f560866ab0cd992c22c9d12bc513fdcadf9c4e591c3752dae50fad5338bcf177",
+ "size": 4914669,
  "packages": []
 }
