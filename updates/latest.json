@@ -1,8 +1,8 @@
 {
- "version": "27.6",
- "notes": "EMAGIAKU GLASS OS diventa tutto EMAGIAKU: nuove EG Impostazioni, nuovo EG Store e un'icona per ogni app.\n\n**Novita' di EMAGIAKU GLASS OS 27.6**\n\n- **EG Impostazioni**: tutte le impostazioni in un'unica app EMAGIAKU: Wi-Fi, Bluetooth, audio, schermo,\n  personalizzazione (Glass Engine), **Account** (immagine del profilo e Account EMAGIAKU, senza aprire\n  altre app), app predefinite, edizione PRO/STUDY, EG Update e App di Windows. Le opzioni piu' tecniche\n  sono in *Avanzate*.\n- **Nuovo EG Store** in stile Microsoft Store, con l'icona della **borsa**: banner in evidenza, righe di app,\n  pagina di ogni app e **Libreria** con *Aggiorna tutte le app*. Cerca anche su **Flathub** (migliaia di\n  app, senza password): **Discover non serve piu'**.\n- **Solo app EMAGIAKU**: le app di terze parti (Dolphin, Konsole, Ark, Kate, Okular, Gwenview, Spectacle,\n  KCalc, Discover) escono dal sistema; **Firefox resta**. Le rimetti con un clic da **EG Store > Essenziali**.\n  Dopo l'aggiornamento esci e rientra: arriva la notifica **\"Completa l'aggiornamento\"** (chiede la password).\n  Finche' non installi altre app, PDF e foto si aprono con Firefox.\n- **Ogni app EMAGIAKU ha la sua icona** (Store, Impostazioni, EGPT, Account, Notes, Focus...).\n- **EG Windows App migliorata**: se un programma non parte ti dice cosa manca (.NET, Visual C++, DirectX...),\n  il pulsante **Componenti Windows** ti porta a installarli, apre i programmi anche da chiavette e altri\n  dischi e puoi creare uno **spazio Giochi** separato per i giochi.\n",
- "file": "emagiaku-glass-os-27.6.tar.gz",
- "sha256": "86908acf6e39ccbe55d28139817c5e76e756f9fd2af0e4d2f38048f470c95cf6",
- "size": 4589499,
+ "version": "27.7",
+ "notes": "\"Attiva PRO / STUDY\" ora e' dentro EG Impostazioni.\n\n**Novita' di EMAGIAKU GLASS OS 27.7**\n\n- **Attiva PRO / STUDY** non e' piu' un'app nel menu: la trovi in **EG Impostazioni** (voce in giallo,\n  come \"Attiva Windows\"), con *Attiva una chiave* e *Acquista con PayPal*. Anche la pagina **Sistema**\n  ti ricorda di attivarla. Dopo l'attivazione la voce diventa **Edizione**.\n",
+ "file": "emagiaku-glass-os-27.7.tar.gz",
+ "sha256": "9f5b2d6387c67d2ae8ae97d3379dcc942257cc18d7ae6a25eade74ce00eb8814",
+ "size": 4589851,
  "packages": []
 }
