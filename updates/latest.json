@@ -1,8 +1,8 @@
 {
- "version": "27.9",
- "notes": "Account EMAGIAKU piu' sicuro.\n\n**Novita' di EMAGIAKU GLASS OS 27.9**\n\n- **Ultimo accesso**: in EG Impostazioni > Account vedi quando e' stato creato l'account e l'ultimo accesso\n  con la password. Se non sei stato tu, cambia subito la password.\n- **Password piu' sicure**: almeno 8 caratteri con lettere e numeri; le password troppo facili\n  (es. \"12345678\", \"aaaa1111\") o con il tuo indirizzo email vengono rifiutate.\n- Quando cambi la password, l'account **si chiude su tutti gli altri PC**.\n",
- "file": "emagiaku-glass-os-27.9.tar.gz",
- "sha256": "a29faa2370a9d222af9d25b0720ec38cd7f27a95ce6f9737d666b256cf5e5a41",
- "size": 4908582,
+ "version": "27.10",
+ "notes": "Arriva la verifica in due passaggi per l'Account EMAGIAKU.\n\n**Novita' di EMAGIAKU GLASS OS 27.10**\n\n- **Verifica in due passaggi** (EG Impostazioni > Account > Account EMAGIAKU): inquadri il codice QR con\n  un'app di autenticazione (Google Authenticator, Microsoft Authenticator, 2FAS...) e salvi i **codici di\n  recupero**. Da quel momento per entrare servono la password **e** il codice del telefono: con la sola\n  password l'account resta bloccato.\n- **Accedi con un codice via email**: senza password, ti arriva un codice di 6 cifre.\n- **Mail di avviso** a ogni nuovo accesso al tuo account.\n- Password ancora piu' sicure: vengono rifiutate anche le password comuni, quelle che contengono nome o email,\n  quelle usate di recente e quelle comparse in furti di dati.\n- **Importante:** l'Account EMAGIAKU e' passato a un nuovo servizio piu' sicuro (Appwrite, server in Europa).\n  Se avevi gia' un account, **crealo di nuovo** (stessa email va bene). Informativa privacy aggiornata.\n",
+ "file": "emagiaku-glass-os-27.10.tar.gz",
+ "sha256": "8caa4780ab07aa32998af4d98cb0b6a732eb019356301d790bb671d23db322fe",
+ "size": 4911991,
  "packages": []
 }
