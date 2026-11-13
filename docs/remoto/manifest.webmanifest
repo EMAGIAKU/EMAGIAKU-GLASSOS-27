@@ -1,0 +1,20 @@
+{
+  "name": "EG Remoto",
+  "short_name": "EG Remoto",
+  "description": "Usa il tuo PC EMAGIAKU GLASS OS da telefono, tablet o Meta Quest.",
+  "id": "/EMAGIAKU-GLASSOS-27/remoto/",
+  "start_url": "/EMAGIAKU-GLASSOS-27/remoto/",
+  "scope": "/EMAGIAKU-GLASSOS-27/remoto/",
+  "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#120c1c",
+  "theme_color": "#120c1c",
+  "lang": "it",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

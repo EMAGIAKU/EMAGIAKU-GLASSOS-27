@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#120c1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EG Remoto">
+<meta name="robots" content="noindex">
+<title>EG Remoto</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="../eg.css">
+<link rel="stylesheet" href="remoto.css">
+</head>
+<body>
+<main id="ui">
+  <div class="brand"><img class="appicon" src="icon-192.png" alt=""><div><b>EG Remoto</b><span>Usa il tuo PC EMAGIAKU da qui</span></div></div>
+  <div id="msg" class="msg" hidden></div>
+
+  <!-- accesso -->
+  <section id="login" class="card" hidden>
+    <h1>Accedi</h1>
+    <p>Serve il tuo Account EMAGIAKU (lo stesso del PC).</p>
+    <button id="b_passkey">Accedi con la passkey</button>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" inputmode="email">
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <button id="b_login" class="alt">Accedi con email e password</button>
+    <p class="small">Non hai un account? Crealo su EMAGIAKU GLASS OS: EG Impostazioni &gt; Account.</p>
+  </section>
+
+  <section id="mfa" class="card" hidden>
+    <h1>Verifica in due passaggi</h1>
+    <p>Scrivi il codice dell'app di autenticazione (o un codice di recupero).</p>
+    <input id="code" inputmode="numeric" autocomplete="one-time-code">
+    <button id="b_mfa">Conferma</button>
+    <button id="b_mfa_out" class="alt">Annulla</button>
+  </section>
+
+  <!-- i miei PC -->
+  <section id="devices" class="card" hidden>
+    <h1>I tuoi PC</h1>
+    <p id="who" class="small"></p>
+    <div id="list"></div>
+    <button id="b_reload" class="alt">Aggiorna l'elenco</button>
+    <button id="b_out" class="alt">Esci dall'account</button>
+    <p class="small">Il PC non c'e'? Sul PC apri EG Impostazioni &gt; Accesso remoto e attiva "Permetti l'accesso remoto".</p>
+  </section>
+
+  <section id="install" class="card" hidden>
+    <h2>Installa l'app</h2>
+    <p id="install_text" class="small"></p>
+    <button id="b_install" hidden>Installa EG Remoto</button>
+  </section>
+  <footer>EMAGIAKU GLASS OS · Developed by EMAGIAKU.TEAM<br>
+    <a href="https://github.com/EMAGIAKU/EMAGIAKU-GLASSOS-27/blob/main/PRIVACY.md">Privacy</a></footer>
+</main>
+
+<!-- schermo del PC -->
+<div id="viewer" hidden>
+  <video id="video" autoplay playsinline muted></video>
+  <div id="status">Collegamento al PC...</div>
+  <input id="kbd" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Tastiera">
+  <div id="bar">
+    <button data-act="kbd" title="Tastiera">⌨</button>
+    <button data-act="right" title="Prossimo tocco = tasto destro">🖱 Dx</button>
+    <button data-act="esc">Esc</button>
+    <button data-act="win" title="Menu Start">EG</button>
+    <button data-act="full" title="Schermo intero">⛶</button>
+    <button data-act="quit" class="quit" title="Scollega">✕</button>
+  </div>
+</div>
+<script src="../eg.js"></script>
+<script src="remoto.js"></script>
+</body>
+</html>
