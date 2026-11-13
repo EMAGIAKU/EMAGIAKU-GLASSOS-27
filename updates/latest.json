@@ -1,8 +1,8 @@
 {
- "version": "27.15",
- "notes": "Niente piu' impostazioni di KDE, e arriva la pagina Sfondo.\n\n**Novita' di EMAGIAKU GLASS OS 27.15**\n\n- **Sfondo** (EG Impostazioni > Sfondo): tutti gli sfondi EMAGIAKU con l'anteprima, oppure una tua immagine.\n  Scegli dove usarlo: desktop, schermata di blocco e schermata di accensione. C'e' anche il cambio\n  automatico ogni tot minuti.\n- **Impostazioni solo EMAGIAKU**: tutto quello che prima apriva le impostazioni di KDE (preferiti del menu,\n  pulsanti \"Configura...\" dell'audio, della rete, del Bluetooth, dello schermo...) ora apre la pagina giusta di\n  **EG Impostazioni**. Vale completamente dal prossimo accesso: dopo l'aggiornamento esci e rientra.\n",
- "file": "emagiaku-glass-os-27.15.tar.gz",
- "sha256": "d09f170f89d11884fe962df0ae8583cd9ccf7cc70e7b5c6f1cf8ec4759b6ebd4",
- "size": 4928120,
+ "version": "27.16",
+ "notes": "Schermi: direzione e posizione.\n\n**Novita' di EMAGIAKU GLASS OS 27.16**\n\n- **Direzione dello schermo** (EG Impostazioni > Schermo): normale, ruotato a sinistra o a destra (monitor in\n  verticale) o capovolto.\n- **Posizione degli schermi**: scegli lo schermo principale e dove stanno gli altri (a destra, a sinistra,\n  sopra o sotto). Un disegno ti mostra come saranno messi prima di premere Applica.\n- Gli schermi non si sovrappongono mai, anche con un monitor in verticale.\n",
+ "file": "emagiaku-glass-os-27.16.tar.gz",
+ "sha256": "7113b6582115276341dd1c4470b1c82133150b281ce749561847fae0f3747b2b",
+ "size": 4929547,
  "packages": []
 }
