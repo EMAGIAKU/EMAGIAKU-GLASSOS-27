@@ -12,7 +12,7 @@ const perms = () => ['read("user:' + ME.$id + '")', 'update("user:' + ME.$id + '
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function view(which) {
-  ["login", "mfa", "devices"].forEach((s) => EG.show(s, s === which));
+  ["login", "signup", "verify", "mfa", "devices"].forEach((s) => EG.show(s, s === which));
   showInstall(which === "devices");
 }
 
@@ -51,6 +51,67 @@ async function loginPasskey(btn) {
   } catch (e) {
     EG.msg(EG.niceError(e) + (e && e.name === "NotAllowedError" ?
       " Crea la passkey da EG Impostazioni > Account sul PC." : ""), "bad");
+  } finally { EG.busy(btn, false); }
+}
+
+// stesse regole del PC (egcloud.password_problem); il server fa anche i suoi controlli
+const COMMON_PW = ["password", "password1", "password123", "12345678", "123456789", "1234567890", "qwerty123",
+  "qwertyuiop", "abc12345", "abcd1234", "iloveyou1", "admin123", "welcome1", "passw0rd", "11111111", "00000000",
+  "ciao1234", "amore123", "juventus1", "napoli123", "emagiaku1", "emagiaku123"];
+function passwordProblem(pw, email) {
+  if (pw.length < 8) return "La password deve avere almeno 8 caratteri.";
+  if (!/\p{L}/u.test(pw) || !/\d/.test(pw)) return "La password deve avere sia lettere sia numeri.";
+  if (COMMON_PW.includes(pw.toLowerCase()) || new Set(pw).size <= 3) return "Password troppo facile da indovinare: scegline un'altra.";
+  const user = (email.split("@")[0] || "").toLowerCase();
+  if (user.length >= 4 && pw.toLowerCase().includes(user)) return "La password non deve contenere il tuo indirizzo email.";
+  return "";
+}
+
+async function signUp(btn) {
+  EG.msg("");
+  const name = EG.$("s_name").value.trim(), email = EG.$("s_email").value.trim();
+  const pw = EG.$("s_pw").value, pw2 = EG.$("s_pw2").value;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { EG.msg("Scrivi un indirizzo email valido.", "bad"); return; }
+  const bad = passwordProblem(pw, email);
+  if (bad) { EG.msg(bad, "bad"); return; }
+  if (pw !== pw2) { EG.msg("Le due password non sono uguali.", "bad"); return; }
+  EG.busy(btn, true, "Creo l'account...");
+  try {
+    await EG.logoutLocal();
+    const body = { userId: "unique()", email, password: pw };
+    if (name) body.name = name;
+    await EG.call("POST", "/account", body);
+    await EG.call("POST", "/account/sessions/email", { email, password: pw });
+    ["s_pw", "s_pw2"].forEach((id) => { EG.$(id).value = ""; });
+    ME = await EG.call("GET", "/account");
+    await sendVerify();
+  } catch (e) {
+    EG.msg(EG.niceError(e), "bad");
+  } finally { EG.busy(btn, false); }
+}
+
+async function sendVerify() {
+  view("verify");
+  EG.$("v_text").textContent = "Ti abbiamo mandato un codice di 6 cifre a " + ME.email + ". Guarda anche nello spam.";
+  try {
+    await EG.call("POST", "/account/verifications/email/otp", {});
+  } catch (e) {
+    EG.msg(EG.niceError(e), "bad");
+  }
+}
+
+async function confirmVerify(btn) {
+  EG.msg("");
+  const code = EG.$("v_code").value.replace(/\s/g, "");
+  if (!/^\d{6}$/.test(code)) { EG.msg("Il codice ha 6 cifre.", "bad"); return; }
+  EG.busy(btn, true);
+  try {
+    await EG.call("PUT", "/account/verifications/email/otp", { userId: ME.$id, secret: code });
+    EG.$("v_code").value = "";
+    EG.msg("Email confermata. Account pronto!", "ok");
+    await start();
+  } catch (e) {
+    EG.msg(EG.niceError(e), "bad");
   } finally { EG.busy(btn, false); }
 }
 
@@ -297,6 +358,14 @@ if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catc
 EG.$("b_login").onclick = (e) => loginPassword(e.target);
 EG.$("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") loginPassword(EG.$("b_login")); });
 EG.$("b_passkey").onclick = (e) => loginPasskey(e.target);
+EG.$("b_go_signup").onclick = () => { EG.msg(""); EG.$("s_email").value = EG.$("email").value; view("signup"); };
+EG.$("b_go_login").onclick = () => { EG.msg(""); view("login"); };
+EG.$("b_signup").onclick = (e) => signUp(e.target);
+EG.$("s_pw2").addEventListener("keydown", (e) => { if (e.key === "Enter") signUp(EG.$("b_signup")); });
+EG.$("b_verify").onclick = (e) => confirmVerify(e.target);
+EG.$("v_code").addEventListener("keydown", (e) => { if (e.key === "Enter") confirmVerify(EG.$("b_verify")); });
+EG.$("b_verify_again").onclick = async (e) => { EG.busy(e.target, true); await sendVerify(); EG.msg("Codice mandato di nuovo.", "ok"); EG.busy(e.target, false); };
+EG.$("b_verify_later").onclick = () => { EG.msg(""); start(); };
 EG.$("b_mfa").onclick = (e) => finishMfa(e.target);
 EG.$("b_mfa_out").onclick = async () => { await EG.logoutLocal(); view("login"); };
 EG.$("b_reload").onclick = () => loadDevices();

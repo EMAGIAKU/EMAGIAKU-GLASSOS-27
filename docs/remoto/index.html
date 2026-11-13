@@ -30,7 +30,32 @@
     <label for="pw">Password</label>
     <input id="pw" type="password" autocomplete="current-password">
     <button id="b_login" class="alt">Accedi con email e password</button>
-    <p class="small">Non hai un account? Crealo su EMAGIAKU GLASS OS: EG Impostazioni &gt; Account.</p>
+    <button id="b_go_signup" class="alt">Non hai un account? Crealo</button>
+  </section>
+
+  <section id="signup" class="card" hidden>
+    <h1>Crea l'Account EMAGIAKU</h1>
+    <p>Lo stesso account funziona sul PC (EG Impostazioni &gt; Account) e qui.</p>
+    <label for="s_name">Nome (facoltativo)</label>
+    <input id="s_name" autocomplete="name" maxlength="128">
+    <label for="s_email">Email</label>
+    <input id="s_email" type="email" autocomplete="username" inputmode="email">
+    <label for="s_pw">Password</label>
+    <input id="s_pw" type="password" autocomplete="new-password">
+    <label for="s_pw2">Ripeti la password</label>
+    <input id="s_pw2" type="password" autocomplete="new-password">
+    <p class="small">Almeno 8 caratteri, con lettere e numeri. Non usare una password che usi altrove.</p>
+    <button id="b_signup">Crea account</button>
+    <button id="b_go_login" class="alt">Ho gia' un account</button>
+  </section>
+
+  <section id="verify" class="card" hidden>
+    <h1>Conferma la tua email</h1>
+    <p id="v_text">Ti abbiamo mandato un codice di 6 cifre.</p>
+    <input id="v_code" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+    <button id="b_verify">Conferma</button>
+    <button id="b_verify_again" class="alt">Mandami un altro codice</button>
+    <button id="b_verify_later" class="alt">Lo faccio dopo</button>
   </section>
 
   <section id="mfa" class="card" hidden>
