@@ -189,7 +189,10 @@ async function addCloudEntries(list) {
     btn.onclick = () => connectCloud(c);
     fetch(c.stato, { cache: "no-store", signal: ctl.signal }).then((r) => r.json()).then((s) => {
       if (!s.ok) throw new Error();
-      dot.classList.add("on"); span.textContent = "senza PC · acceso";
+      dot.classList.add(s.in_uso ? "busy" : "on");
+      span.textContent = "senza PC · " + (s.in_uso ? "pieno, riprova tra poco" :
+        (s.postazioni ? "posti liberi " + s.libere + "/" + s.postazioni : "acceso")) +
+        (typeof s.ore_rimaste === "number" ? " · " + String(s.ore_rimaste).replace(".", ",") + " ore rimaste questo mese" : "");
     }).catch(() => {
       dot.classList.add("off");
       if (c.funzione) {

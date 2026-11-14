@@ -39,7 +39,7 @@ RUN set -e; cd /tmp; B=https://raw.githubusercontent.com/EMAGIAKU/EMAGIAKU-GLASS
     rm -f /etc/xdg/autostart/emagiaku-remote.desktop /etc/xdg/autostart/emagiaku-update.desktop \
           /etc/skel/.config/autostart/emagiaku-game-boost.desktop /etc/skel/.config/autostart/emagiaku-pro-promo.desktop \
           /opt/eg-cloud/skel/.config/autostart/emagiaku-pro-promo.desktop; \
-    chmod 755 /usr/bin/emagiaku-* /opt/eg-cloud/start.sh /opt/eg-cloud/porta-pubblica.sh /opt/eg-cloud/ripulisci.sh
+    chmod 755 /usr/bin/emagiaku-* /opt/eg-cloud/start.sh /opt/eg-cloud/porta-pubblica.sh /opt/eg-cloud/posto.sh
 
 # niente blocco schermo: online l'utente non ha password (a entrare ci pensa il cancello con l'Account EMAGIAKU),
 # quindi un blocco lo chiuderebbe fuori. Regole "kiosk" di KDE per tutto il sistema.
@@ -50,9 +50,13 @@ RUN printf '[Daemon][$i]\nAutolock=false\nLockOnResume=false\nTimeout=0\n' > /et
     printf '#!/bin/sh\n# EMAGIAKU OS online: niente blocco schermo (si entra solo dal cancello)\nexit 0\n' > /usr/lib/kscreenlocker_greet && \
     chmod 755 /usr/lib/kscreenlocker_greet
 
-# utente del desktop (uid 1000)
-RUN useradd -m -u 1000 -s /bin/bash eg && cp -a /opt/eg-cloud/skel/. /home/eg/ && \
-    echo "EMAGIAKU OS online" > /etc/hostname && chown -R eg:eg /home/eg
+# eg (uid 1000): fa girare il cancello e Codespaces. posto1..posto3: una postazione per persona, ognuna con la
+# sua cartella chiusa agli altri. Il cancello puo' usare con i permessi di amministratore SOLO posto.sh.
+RUN useradd -m -u 1000 -s /bin/bash eg && cp -a /opt/eg-cloud/skel/. /home/eg/ && chown -R eg:eg /home/eg && \
+    for n in 1 2 3; do useradd -m -u $((1100 + n)) -s /bin/bash "posto$n" && chmod 700 "/home/posto$n"; done && \
+    printf 'Defaults:eg !requiretty\neg ALL=(root) NOPASSWD: /opt/eg-cloud/posto.sh\n' > /etc/sudoers.d/eg-posti && \
+    chmod 440 /etc/sudoers.d/eg-posti && \
+    echo "EMAGIAKU OS online" > /etc/hostname
 USER eg
 ENV HOME=/home/eg LANG=it_IT.UTF-8 EG_CLOUD=1
 WORKDIR /home/eg

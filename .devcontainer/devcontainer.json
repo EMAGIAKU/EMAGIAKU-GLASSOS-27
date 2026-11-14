@@ -6,7 +6,8 @@
     "dockerfile": "../cloud/Dockerfile",
     "context": "../cloud"
   },
-  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  // 3 postazioni insieme: 4 core / 16 GB (gratis 120 ore-core al mese = 30 ore di accensione)
+  "hostRequirements": { "cpus": 4, "memory": "16gb" },
   "remoteUser": "eg",
   "containerUser": "eg",
   "overrideCommand": true,

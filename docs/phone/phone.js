@@ -110,7 +110,25 @@ async function system() {
   return SYS;
 }
 
-let LAST = null;   // ultimo stato letto (in_uso: c'e' gia' un'altra persona, postazione pubblica)
+let LAST = null;   // ultimo stato letto (postazioni libere, ore rimaste)
+
+// ore gratis rimaste nel mese (le conta il sistema online; da spento mostro l'ultimo valore conosciuto)
+function showHours() {
+  let h = LAST && typeof LAST.ore_rimaste === "number" ? LAST : null;
+  try {
+    if (h) localStorage.setItem("eg_ore", JSON.stringify({ r: h.ore_rimaste, m: h.ore_mese, t: Date.now() }));
+    else { const s = JSON.parse(localStorage.getItem("eg_ore") || "null"); if (s) h = { ore_rimaste: s.r, ore_mese: s.m, vecchio: true }; }
+  } catch (e) { /* niente memoria */ }
+  const el = EG.$("ore");
+  if (!h) { el.hidden = true; return; }
+  const pct = h.ore_mese ? Math.max(0, Math.min(100, (h.ore_rimaste / h.ore_mese) * 100)) : 0;
+  el.hidden = false;
+  el.querySelector("b").textContent = String(h.ore_rimaste).replace(".", ",") + " ore";
+  el.querySelector("span").textContent = "rimaste questo mese su " + String(h.ore_mese).replace(".", ",") +
+    (h.vecchio ? " (ultimo dato)" : "");
+  el.querySelector("i").style.width = pct + "%";
+  el.classList.toggle("poche", h.ore_rimaste < 3);
+}
 async function isOn(c) {
   const ctl = new AbortController();
   setTimeout(() => ctl.abort(), 6000);
@@ -134,16 +152,19 @@ async function home(autoOpen = true) {
     return;
   }
   EG.$("b_open").disabled = false;
-  if (await isOn(c)) {
+  const on = await isOn(c);
+  showHours();
+  if (on) {
     dot.classList.add("on");
     if (LAST && LAST.in_uso) {
-      EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' in uso";
-      EG.$("st_text").textContent = "Lo sta usando un'altra persona (uno alla volta). Riprova tra qualche minuto.";
+      EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' pieno";
+      EG.$("st_text").textContent = "Tutte le " + (LAST.postazioni || 3) + " postazioni sono occupate. Riprova tra qualche minuto.";
       return;
     }
     EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' acceso";
-    EG.$("st_text").textContent = "Si apre a tutto schermo. Tocca il pallino EG per tastiera e menu. Quando esci, " +
-      "dopo un minuto e mezzo il desktop viene ripulito (file e account cancellati).";
+    EG.$("st_text").textContent = (LAST && LAST.postazioni ? "Postazioni libere: " + LAST.libere + " di " +
+      LAST.postazioni + ". " : "") + "Si apre a tutto schermo; tocca il pallino EG per tastiera e menu. Quando esci, " +
+      "dopo un minuto e mezzo la tua postazione viene ripulita (file e account cancellati).";
     if (autoOpen && !sessionStorage.getItem("eg_phone_closed")) openOS();
   } else {
     dot.classList.add("off");

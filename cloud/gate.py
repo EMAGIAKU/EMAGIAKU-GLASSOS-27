@@ -1,11 +1,12 @@
 """EMAGIAKU OS online - cancello.
 
-L'unica porta aperta verso internet (7860). Lo schermo virtuale (VNC) ascolta solo dentro il contenitore:
+L'unica porta aperta verso internet (7860). Gli schermi virtuali (VNC) ascoltano solo dentro il contenitore:
 per arrivarci bisogna aprire /ws e mandare come PRIMO messaggio un JWT dell'Account EMAGIAKU (Appwrite).
 Il JWT viene controllato da Appwrite; l'account deve avere l'email verificata ed essere nell'elenco
 EG_UTENTI (segreto Codespaces: email o ID separati da virgola). Elenco vuoto = non entra nessuno.
-EG_UTENTI = "*" (27.22): aperto a TUTTI gli Account EMAGIAKU con email confermata, come una postazione
-pubblica: una persona alla volta e, quando esce, il desktop viene ripulito (ripulisci.sh).
+EG_UTENTI = "*": aperto a TUTTI gli Account EMAGIAKU con email confermata.
+Postazioni (27.22): EG_POSTI persone insieme (3), ognuna con il suo utente Linux, schermo e desktop
+(posto.sh); quando una persona esce la sua postazione viene ripulita. /stato dice anche le ore rimaste nel mese.
 """
 import asyncio
 import json
@@ -16,15 +17,19 @@ from aiohttp import ClientSession, ClientTimeout, WSMsgType, web
 
 ENDPOINT = "https://fra.cloud.appwrite.io/v1"
 PROJECT = "6af5ebe90008bba8da64"
-VNC = ("127.0.0.1", 5900)
 ALLOWED = {x.strip().lower() for x in os.environ.get("EG_UTENTI", "").split(",") if x.strip()}
-PUBLIC = "*" in ALLOWED          # postazione pubblica: tutti, uno alla volta, desktop ripulito all'uscita
+PUBLIC = "*" in ALLOWED          # aperto a tutti gli Account EMAGIAKU con email confermata
 FAILS = {}            # ip -> [tempi dei tentativi sbagliati]
 STARTED = time.time()
-# chi sta usando il sistema adesso: {"uid", "conns": numero di collegamenti aperti, "reset": attesa pulizia}
-CURRENT = {"uid": None, "conns": 0, "reset": None}
-RESET_SCRIPT = "/opt/eg-cloud/ripulisci.sh"
+# postazioni (27.22): ognuna e' un utente Linux diverso con il suo schermo :N (porta interna 5900+N)
+NPOSTI = max(1, min(9, int(os.environ.get("EG_POSTI", "3"))))
+POSTO = "/opt/eg-cloud/posto.sh"
+SEATS = {n: {"uid": None, "conns": 0, "reset": None, "since": 0} for n in range(1, NPOSTI + 1)}
 RESET_DELAY = 90      # secondi: chi preme "Ricollega" o perde la rete per un attimo non perde il lavoro
+# ore gratis di GitHub Codespaces: 120 ore-core al mese -> ore di accensione = 120 / core della macchina
+ORE_FILE = os.environ.get("EG_ORE_FILE", "/workspaces/.eg-ore.json")
+CORE = os.cpu_count() or 2
+ORE_MESE = float(os.environ.get("EG_ORE_MESE", 120.0 / CORE))
 
 PAGE = """<!doctype html><html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>EMAGIAKU OS online</title><body style="font-family:sans-serif;background:#120c1c;color:#eee;padding:24px">
@@ -65,117 +70,127 @@ async def check_jwt(jwt):
     return user, ""
 
 
-# ---------------------------------------------------------------- una persona alla volta
-def busy_for(user):
-    """Messaggio se il sistema e' occupato da un altro account ('' se si puo' entrare)."""
-    if PUBLIC and CURRENT["uid"] and CURRENT["uid"] != user.get("$id"):
-        return "EMAGIAKU OS online e' in uso da un'altra persona: riprova tra qualche minuto."
-    return ""
+# ---------------------------------------------------------------- postazioni
+async def posto(*args, stdin=None):
+    """Azione privilegiata sulle postazioni (solo quelle previste da posto.sh)."""
+    proc = await asyncio.create_subprocess_exec("sudo", "-n", POSTO, *[str(a) for a in args],
+                                                stdin=asyncio.subprocess.PIPE if stdin else None,
+                                                stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
+    try:
+        await asyncio.wait_for(proc.communicate(stdin.encode() if stdin else None), timeout=30)
+    except asyncio.TimeoutError:
+        proc.kill()
+    return proc.returncode == 0
 
 
-def enter(user):
-    if CURRENT["reset"]:
-        CURRENT["reset"].cancel()              # e' tornato (Ricollega): niente pulizia
-        CURRENT["reset"] = None
-    CURRENT["uid"] = user.get("$id")
-    CURRENT["conns"] += 1
+def seat_of(user):
+    for n, s in SEATS.items():
+        if s["uid"] == user.get("$id"):
+            return n
+    return 0
 
 
-def leave(user):
-    CURRENT["conns"] = max(0, CURRENT["conns"] - 1)
-    if CURRENT["conns"] == 0 and CURRENT["uid"] == user.get("$id"):
-        CURRENT["reset"] = asyncio.get_running_loop().call_later(
-            RESET_DELAY, lambda: asyncio.ensure_future(free_and_reset(user)))
+def take_seat(user):
+    """Postazione per questo account: la sua se ce l'ha gia' (Ricollega), altrimenti la prima libera. 0 = piene."""
+    n = seat_of(user)
+    if not n:
+        n = next((k for k, s in SEATS.items() if not s["uid"]), 0)
+    if not n:
+        return 0
+    s = SEATS[n]
+    if s["reset"]:
+        s["reset"].cancel()                    # e' tornato (Ricollega): niente pulizia
+        s["reset"] = None
+    if s["uid"] != user.get("$id"):
+        s["since"] = time.time()
+    s["uid"] = user.get("$id")
+    s["conns"] += 1
+    return n
 
 
-async def free_and_reset(user):
-    CURRENT["reset"] = None
-    if CURRENT["conns"]:
+def leave(user, n):
+    s = SEATS[n]
+    s["conns"] = max(0, s["conns"] - 1)
+    if s["conns"] == 0 and s["uid"] == user.get("$id"):
+        s["reset"] = asyncio.get_running_loop().call_later(
+            RESET_DELAY, lambda: asyncio.ensure_future(free_and_reset(user, n)))
+
+
+async def free_and_reset(user, n):
+    s = SEATS[n]
+    s["reset"] = None
+    if s["conns"]:
         return
-    forget_account(user)
-    if PUBLIC and os.path.exists(RESET_SCRIPT):
-        proc = await asyncio.create_subprocess_exec(RESET_SCRIPT, stdout=asyncio.subprocess.DEVNULL,
-                                                    stderr=asyncio.subprocess.DEVNULL)
-        await proc.wait()
-        print("EMAGIAKU OS online: desktop ripulito dopo l'uscita", flush=True)
-    CURRENT["uid"] = None                      # libero per il prossimo
+    await posto("dimentica", n, user.get("$id", ""))
+    if PUBLIC:
+        await posto("ripulisci", n)            # chi arriva dopo trova la postazione come nuova
+        print("EMAGIAKU OS online: postazione %d ripulita" % n, flush=True)
+    s["uid"] = None                            # libera per il prossimo
 
 
-# comandi che l'app puo' chiedere dopo l'accesso: solo questi, niente comandi liberi
-COMMANDS = {
-    # menu EG: il tasto Super da solo non arriva a KWin dallo schermo virtuale, quindi lo chiedo a Plasma
-    "menu": ["gdbus", "call", "--session", "--dest", "org.kde.plasmashell", "--object-path", "/PlasmaShell",
-             "--method", "org.kde.PlasmaShell.activateLauncherMenu"],
-}
+def free_seats():
+    return sum(1 for s in SEATS.values() if not s["uid"])
 
 
-# Account EMAGIAKU gia' collegato nel sistema online (27.21): il JWT di chi entra va nel file account
-# delle app EG (egcloud usa X-Appwrite-JWT). L'app lo rinnova ogni 10 minuti; all'uscita si cancella.
-ACCOUNT_FILE = os.path.join(os.path.expanduser("~"), ".config", "emagiaku", "account.json")
+# ---------------------------------------------------------------- ore rimaste nel mese
+def _ore_load():
+    try:
+        with open(ORE_FILE, encoding="utf-8") as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        d = {}
+    mese = time.strftime("%Y-%m")
+    if d.get("mese") != mese:                  # nuovo mese: GitHub riparte da zero
+        d = {"mese": mese, "secondi": 0}
+    return d
 
 
-def write_account(user, jwt):
-    os.makedirs(os.path.dirname(ACCOUNT_FILE), exist_ok=True)
+ORE = _ore_load()
+
+
+async def ore_counter():
+    """Conta i minuti di accensione (il Codespace consuma ore solo quando e' acceso)."""
+    while True:
+        await asyncio.sleep(60)
+        if ORE.get("mese") != time.strftime("%Y-%m"):
+            ORE.update({"mese": time.strftime("%Y-%m"), "secondi": 0})
+        ORE["secondi"] = int(ORE.get("secondi", 0)) + 60
+        try:
+            tmp = ORE_FILE + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(ORE, f)
+            os.replace(tmp, ORE_FILE)
+        except OSError:
+            pass
+
+
+def ore_rimaste():
+    return max(0.0, round(ORE_MESE - int(ORE.get("secondi", 0)) / 3600.0, 1))
+
+
+# Account EMAGIAKU gia' collegato nella postazione (27.21): il JWT di chi entra va nel file account
+# delle app EG della SUA postazione (egcloud usa X-Appwrite-JWT). L'app lo rinnova ogni 10 minuti.
+async def write_account(user, jwt, n):
     data = {"email": user.get("email", ""), "uid": user.get("$id", ""), "session": "eg-phone", "jwt": jwt,
             "verified": bool(user.get("emailVerification")), "name": user.get("name", "")}
-    tmp = ACCOUNT_FILE + ".tmp"
-    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-    with os.fdopen(fd, "w", encoding="utf-8") as f:
-        json.dump(data, f)
-    os.replace(tmp, ACCOUNT_FILE)
+    return await posto("account", n, stdin=json.dumps(data))
 
 
-def forget_account(user):
-    try:
-        with open(ACCOUNT_FILE, encoding="utf-8") as f:
-            if json.load(f).get("uid") != user.get("$id"):
-                return                       # nel frattempo e' entrato un altro account: non lo tocco
-        os.remove(ACCOUNT_FILE)
-    except (OSError, ValueError):
-        pass
-
-
-def plasma_bus():
-    """Indirizzo D-Bus della sessione Plasma (preso dal processo plasmashell)."""
-    for pid in os.listdir("/proc"):
-        if not pid.isdigit():
-            continue
-        try:
-            with open("/proc/%s/comm" % pid) as f:
-                if f.read().strip() != "plasmashell":
-                    continue
-            with open("/proc/%s/environ" % pid, "rb") as f:
-                for item in f.read().split(b"\0"):
-                    if item.startswith(b"DBUS_SESSION_BUS_ADDRESS="):
-                        return item.split(b"=", 1)[1].decode()
-        except OSError:
-            continue
-    return ""
-
-
-async def command(text, user=None):
+async def command(text, user, n):
+    """Comandi dell'app (solo questi): rinnovo dell'account e menu EG della propria postazione."""
     try:
         msg = json.loads(text)
         name = msg.get("cmd")
     except (ValueError, AttributeError):
         return
-    if name == "jwt" and user:
+    if name == "jwt":
         # rinnovo del pass: valido solo se e' dello STESSO account entrato dal cancello
         new_user, _err = await check_jwt(str(msg.get("jwt", "")))
         if new_user and new_user.get("$id") == user.get("$id"):
-            write_account(new_user, msg["jwt"])
-        return
-    cmd = COMMANDS.get(name)
-    bus = plasma_bus()
-    if not cmd or not bus:
-        return
-    env = dict(os.environ, DBUS_SESSION_BUS_ADDRESS=bus, DISPLAY=":1")
-    proc = await asyncio.create_subprocess_exec(*cmd, env=env, stdout=asyncio.subprocess.DEVNULL,
-                                                stderr=asyncio.subprocess.DEVNULL)
-    try:
-        await asyncio.wait_for(proc.wait(), timeout=5)
-    except asyncio.TimeoutError:
-        proc.kill()
+            await write_account(new_user, msg["jwt"], n)
+    elif name == "menu":
+        # il tasto Super da solo non arriva a KWin dallo schermo virtuale: lo chiedo a Plasma
+        await posto("menu", n)
 
 
 async def index(_req):
@@ -183,8 +198,10 @@ async def index(_req):
 
 
 async def stato(_req):
+    libere = free_seats()
     return web.json_response({"ok": True, "nome": "EMAGIAKU OS online", "acceso_da_s": int(time.time() - STARTED),
-                              "in_uso": bool(PUBLIC and CURRENT["uid"])},
+                              "postazioni": NPOSTI, "libere": libere, "in_uso": libere == 0,
+                              "ore_rimaste": ore_rimaste(), "ore_mese": round(ORE_MESE, 1)},
                              headers={"Access-Control-Allow-Origin": "*"})
 
 
@@ -212,24 +229,23 @@ async def ws_handler(req):
         await ws.send_str(json.dumps({"ok": False, "errore": err}))
         await ws.close()
         return ws
-    busy = busy_for(user)
-    if busy:
-        await ws.send_str(json.dumps({"ok": False, "errore": busy}))
+    n = take_seat(user)
+    if not n:
+        await ws.send_str(json.dumps({"ok": False, "errore": "Tutte le %d postazioni di EMAGIAKU OS online sono "
+                                                              "occupate: riprova tra qualche minuto." % NPOSTI}))
         await ws.close()
         return ws
     try:
-        reader, writer = await asyncio.open_connection(*VNC)
+        reader, writer = await asyncio.open_connection("127.0.0.1", 5900 + n)
     except OSError:
+        leave(user, n)
         await ws.send_str(json.dumps({"ok": False, "errore": "Il desktop si sta ancora avviando: riprova tra poco."}))
         await ws.close()
         return ws
-    enter(user)
-    print("EMAGIAKU OS online: entra %s" % user.get("email"), flush=True)
-    try:
-        write_account(user, json.loads(first.data).get("jwt", ""))   # le app EG trovano gia' l'account
-    except OSError as e:
-        print("EMAGIAKU OS online: account non salvato: %s" % e, flush=True)
-    await ws.send_str(json.dumps({"ok": True}))
+    print("EMAGIAKU OS online: entra %s nella postazione %d" % (user.get("email"), n), flush=True)
+    if not await write_account(user, json.loads(first.data).get("jwt", ""), n):   # account gia' collegato
+        print("EMAGIAKU OS online: account non salvato nella postazione %d" % n, flush=True)
+    await ws.send_str(json.dumps({"ok": True, "postazione": n}))
 
     async def vnc_to_ws():
         while True:
@@ -244,7 +260,7 @@ async def ws_handler(req):
                 writer.write(msg.data)
                 await writer.drain()
             elif msg.type == WSMsgType.TEXT:
-                await command(msg.data, user)    # comandi dell'app (solo un elenco fisso, vedi COMMANDS)
+                await command(msg.data, user, n)  # comandi dell'app (solo rinnovo account e menu EG)
             elif msg.type in (WSMsgType.CLOSE, WSMsgType.ERROR):
                 break
 
@@ -256,12 +272,17 @@ async def ws_handler(req):
             t.cancel()
         writer.close()
         await ws.close()
-        leave(user)        # dopo 90 s senza ritorno: account dimenticato (e desktop ripulito se pubblico)
-        print("EMAGIAKU OS online: esce %s" % user.get("email"), flush=True)
+        leave(user, n)     # dopo 90 s senza ritorno: account dimenticato (e postazione ripulita se pubblico)
+        print("EMAGIAKU OS online: esce %s dalla postazione %d" % (user.get("email"), n), flush=True)
     return ws
 
 
+async def on_startup(app_):
+    app_["ore"] = asyncio.create_task(ore_counter())
+
+
 app = web.Application()
+app.on_startup.append(on_startup)
 app.add_routes([web.get("/", index), web.get("/stato", stato), web.get("/ws", ws_handler)])
 
 if __name__ == "__main__":
