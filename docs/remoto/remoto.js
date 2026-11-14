@@ -142,8 +142,12 @@ async function loadDevices() {
     return EG.msg(EG.niceError(e), "bad");
   }
   list.textContent = "";
+  addCloudEntries(list);
   if (!rows.length) {
-    list.innerHTML = '<p class="small">Nessun PC collegato a questo account.</p>';
+    const p = document.createElement("p");
+    p.className = "small";
+    p.textContent = "Nessun PC collegato a questo account.";
+    list.appendChild(p);
     return;
   }
   const now = Date.now() / 1000;
@@ -161,6 +165,62 @@ async function loadDevices() {
     b.onclick = () => connect(d);
     list.appendChild(div);
   });
+}
+
+// ------------------------------------------------------------- EMAGIAKU OS online (senza PC)
+// elenco in cloud.json: [{ "name": "...", "ws": "wss://.../ws", "stato": "https://.../stato" }]
+let CLOUDS = null;
+async function addCloudEntries(list) {
+  if (CLOUDS === null) {
+    try { CLOUDS = (await (await fetch("cloud.json", { cache: "no-cache" })).json()).sistemi || []; }
+    catch (e) { CLOUDS = []; }
+  }
+  CLOUDS.forEach((c) => {
+    if (!/^wss:\/\//.test(c.ws || "")) return;
+    const div = document.createElement("div");
+    div.className = "dev cloud";
+    div.innerHTML = '<div class="dot"></div><div class="info"><b></b><span>controllo...</span></div><button>Apri</button>';
+    div.querySelector("b").textContent = c.name || "EMAGIAKU OS online";
+    list.prepend(div);
+    const dot = div.querySelector(".dot"), span = div.querySelector("span");
+    const ctl = new AbortController();
+    setTimeout(() => ctl.abort(), 6000);
+    fetch(c.stato, { cache: "no-store", signal: ctl.signal }).then((r) => r.json()).then((s) => {
+      if (!s.ok) throw new Error();
+      dot.classList.add("on"); span.textContent = "senza PC · acceso";
+    }).catch(() => { dot.classList.add("busy"); span.textContent = "senza PC · in pausa, si sveglia quando lo apri (circa 1 minuto)"; });
+    div.querySelector("button").onclick = () => connectCloud(c);
+  });
+}
+
+async function connectCloud(c) {
+  EG.msg("");
+  if (!ME.emailVerification) { EG.msg("Prima conferma la tua email: EG Remoto ti manda un codice.", "bad"); return sendVerify(); }
+  CUR = { cloud: c };
+  EG.show("ui", false);
+  EG.show("viewer", true);
+  EG.show("video", false);
+  EG.show("screen", true);
+  setStatus("Apro " + (c.name || "EMAGIAKU OS online") + "...");
+  try {
+    if (!window.EGCloud) await new Promise((ok) => window.addEventListener("egcloud-ready", ok, { once: true }));
+    // sveglia lo Space se dorme (la prima volta puo' servire circa un minuto)
+    for (let i = 0; i < 30 && CUR; i++) {
+      try { const s = await (await fetch(c.stato, { cache: "no-store" })).json(); if (s.ok) break; } catch (e) { /* dorme */ }
+      setStatus("Sto svegliando EMAGIAKU OS online... (" + (i * 4) + " s)");
+      await sleep(4000);
+    }
+    if (!CUR) return;
+    const jwt = (await EG.call("POST", "/account/jwts", {})).jwt;   // vale 15 minuti, serve solo per entrare
+    setStatus("Entro con il tuo Account EMAGIAKU...");
+    EGCloud.connect(c, jwt, {
+      screen: EG.$("screen"),
+      status: setStatus,
+      ended: (reason) => { if (CUR && CUR.cloud) disconnect(reason); },
+    });
+  } catch (e) {
+    disconnect(EG.niceError(e));
+  }
 }
 
 // ------------------------------------------------------------- collegamento
@@ -247,10 +307,13 @@ function iceDone(pc, ms) {
 
 function disconnect(reason) {
   clearTimeout(videoWatch);
+  if (window.EGCloud) EGCloud.stop();
+  EG.show("screen", false);
+  EG.show("video", true);
   if (PC) { try { PC.close(); } catch (e) { /* gia' chiuso */ } }
   PC = null; DC = null;
   const c = CUR; CUR = null;
-  if (c) cleanup(c);
+  if (c && c.dev) cleanup(c);
   EG.show("viewer", false);
   EG.show("ui", true);
   if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
@@ -268,7 +331,15 @@ async function cleanup(c) {
 function setStatus(t) { EG.$("status").textContent = t; EG.$("status").hidden = !t; }
 
 // ------------------------------------------------------------- comandi
-function send(o) { if (DC && DC.readyState === "open") DC.send(JSON.stringify(o)); }
+function send(o) {
+  if (window.EGCloud && EGCloud.active()) {        // EMAGIAKU OS online: mouse e tocco li gestisce noVNC
+    if (o.t === "text") EGCloud.text(o.s);
+    else if (o.t === "key" && o.k === "Super" && !(o.mods || []).length) EGCloud.menu();
+    else if (o.t === "key") EGCloud.key(o.k, o.mods);
+    return;
+  }
+  if (DC && DC.readyState === "open") DC.send(JSON.stringify(o));
+}
 
 function videoPoint(clientX, clientY) {
   // coordinate 0..1 dentro l'immagine del PC (tenendo conto delle bande nere)
@@ -357,6 +428,10 @@ function setupInput() {
     if (!b) return;
     const a = b.dataset.act;
     if (a === "kbd") { kbd.focus(); }
+    else if (a === "right" && CUR && CUR.cloud) {
+      setStatus("Tasto destro: tieni premuto il dito sullo schermo (oppure tocca con due dita).");
+      setTimeout(() => setStatus(""), 2500);
+    }
     else if (a === "right") setRight(!rightNext);
     else if (a === "esc") send({ t: "key", k: "Escape", mods: [] });
     else if (a === "win") send({ t: "key", k: "Super", mods: [] });

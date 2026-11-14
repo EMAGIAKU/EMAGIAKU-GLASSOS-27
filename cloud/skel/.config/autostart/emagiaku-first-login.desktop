@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=EMAGIAKU primo avvio
+Exec=/usr/bin/emagiaku-first-login
+X-KDE-autostart-after=panel
+NoDisplay=true

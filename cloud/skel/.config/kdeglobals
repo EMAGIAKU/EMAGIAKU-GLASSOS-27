@@ -1,0 +1,9 @@
+[General]
+ColorScheme=EmagiakuGlass
+
+[KDE]
+widgetStyle=Breeze
+LookAndFeelPackage=org.emagiaku.glass.dark
+
+[WM]
+activeBackground=18,12,28

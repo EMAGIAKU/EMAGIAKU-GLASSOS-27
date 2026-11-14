@@ -12,6 +12,9 @@
 #viewer { position: fixed; inset: 0; background: #000; touch-action: none; user-select: none;
           -webkit-user-select: none; overflow: hidden; }
 #video { position: absolute; inset: 0; width: 100%; height: calc(100% - 52px); object-fit: contain; background: #000; }
+#screen { position: absolute; inset: 0; height: calc(100% - 52px); background: #000; }
+#screen[hidden], #video[hidden] { display: none; }
+.dev.cloud { border-color: #6d4bd8; background: linear-gradient(135deg, #1d1236, #160f26); }
 #status { position: absolute; top: 40%; left: 0; right: 0; text-align: center; color: #fff; font-size: 17px;
           text-shadow: 0 1px 3px #000; pointer-events: none; padding: 0 20px; }
 #kbd { position: absolute; left: -1000px; top: 0; width: 10px; height: 10px; opacity: 0; }

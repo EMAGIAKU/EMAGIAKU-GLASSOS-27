@@ -1,8 +1,8 @@
 {
- "version": "27.18",
- "notes": "EG Remoto: ora si vede lo schermo anche su iPhone e iPad.\n\n**Novita' di EMAGIAKU GLASS OS 27.18**\n\n- **EG Remoto su iPhone/iPad**: prima i comandi arrivavano al PC ma lo schermo restava nero. Ora il PC manda\n  il video in un formato che Safari accetta (H.264 annunciato correttamente, oppure VP8).\n- Se il video non arriva entro pochi secondi, la web app **riprova da sola con un altro formato** e se lo ricorda.\n- Il telefono dice al PC quanto e' grande lo schermo che gli serve: su iPhone/iPad il video e' al massimo\n  1280 pixel di larghezza (piu' fluido e leggero).\n- Nella web app EG Remoto ora puoi anche **creare l'Account EMAGIAKU** (\"Non hai un account? Crealo\").\n",
- "file": "emagiaku-glass-os-27.18.tar.gz",
- "sha256": "8954ccbd4c725f83ff86d8f53730533686f1bfcf70eb2f7844d6a2bf4399c394",
- "size": 4938940,
+ "version": "27.19",
+ "notes": "EMAGIAKU OS online: usa il sistema dall'app EG Remoto anche senza PC. E EG Remoto pronto per KDE 6.8.\n\n**Novita' di EMAGIAKU GLASS OS 27.19**\n\n- **EMAGIAKU OS online**: nella web app EG Remoto, accanto ai tuoi PC, compare \"EMAGIAKU OS online\", il sistema\n  EMAGIAKU che gira su internet (gratis). Lo apri dal telefono anche quando il PC e' spento: desktop, app EG,\n  Firefox, menu EG, tastiera e tocco. Entra solo chi ha un Account EMAGIAKU autorizzato e con l'email confermata.\n  E' piu' lento di un PC vero e i file salvati li' si cancellano quando si riavvia.\n- **EG Remoto con KDE Plasma 6.8**: Arch Linux ha aggiornato KDE alla 6.8, che funziona solo in Wayland.\n  EG Remoto ora funziona anche in Wayland: la prima volta che ti colleghi, sul PC compare la richiesta di KDE\n  \"Condivisione dello schermo e controllo\": premi **Consenti** (poi non la chiede piu').\n- \"Installa i componenti\" in Accesso remoto aggiunge quelli per Wayland (PipeWire e portale KDE).\n- EG Impostazioni > Accesso remoto spiega EMAGIAKU OS online e il permesso di Wayland.\n",
+ "file": "emagiaku-glass-os-27.19.tar.gz",
+ "sha256": "65ef64f499a6df1cb489830e734d650f1d6447d1df184d46ee67c6ee21b51597",
+ "size": 4942623,
  "packages": []
 }

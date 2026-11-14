@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=EMAGIAKU sessione
+Exec=python3 /usr/lib/emagiaku/common.py session
+NoDisplay=true

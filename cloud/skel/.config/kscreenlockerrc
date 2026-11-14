@@ -1,0 +1,6 @@
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=/usr/share/wallpapers/EmagiakuWelcome/contents/images/3840x2160.png
+PreviewImage=/usr/share/wallpapers/EmagiakuWelcome/contents/images/3840x2160.png
