@@ -41,7 +41,16 @@ RUN set -e; cd /tmp; B=https://raw.githubusercontent.com/EMAGIAKU/EMAGIAKU-GLASS
           /opt/eg-cloud/skel/.config/autostart/emagiaku-pro-promo.desktop; \
     chmod 755 /usr/bin/emagiaku-* /opt/eg-cloud/start.sh
 
-# utente del desktop (Hugging Face avvia i contenitori come uid 1000)
+# niente blocco schermo: online l'utente non ha password (a entrare ci pensa il cancello con l'Account EMAGIAKU),
+# quindi un blocco lo chiuderebbe fuori. Regole "kiosk" di KDE per tutto il sistema.
+RUN printf '[Daemon][$i]\nAutolock=false\nLockOnResume=false\nTimeout=0\n' > /etc/xdg/kscreenlockerrc && \
+    printf '\n[KDE Action Restrictions][$i]\nlock_screen=false\n' >> /etc/xdg/kdeglobals && \
+    # se qualcosa blocca lo stesso, la schermata di blocco si chiude subito con esito "sbloccato"
+    mv /usr/lib/kscreenlocker_greet /usr/lib/kscreenlocker_greet.orig && \
+    printf '#!/bin/sh\n# EMAGIAKU OS online: niente blocco schermo (si entra solo dal cancello)\nexit 0\n' > /usr/lib/kscreenlocker_greet && \
+    chmod 755 /usr/lib/kscreenlocker_greet
+
+# utente del desktop (uid 1000)
 RUN useradd -m -u 1000 -s /bin/bash eg && cp -a /opt/eg-cloud/skel/. /home/eg/ && \
     echo "EMAGIAKU OS online" > /etc/hostname && chown -R eg:eg /home/eg
 USER eg

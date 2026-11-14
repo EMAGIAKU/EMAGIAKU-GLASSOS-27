@@ -1,0 +1,20 @@
+{
+  "name": "EG GLASS PHONE",
+  "short_name": "EG PHONE",
+  "description": "EMAGIAKU GLASS OS sul telefono, a tutto schermo, senza PC.",
+  "id": "/EMAGIAKU-GLASSOS-27/phone/",
+  "start_url": "/EMAGIAKU-GLASSOS-27/phone/",
+  "scope": "/EMAGIAKU-GLASSOS-27/phone/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "landscape",
+  "background_color": "#120c1c",
+  "theme_color": "#120c1c",
+  "lang": "it",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

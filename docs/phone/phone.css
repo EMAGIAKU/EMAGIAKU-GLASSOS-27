@@ -1,0 +1,39 @@
+.appicon { width: 46px; height: 46px; border-radius: 12px; }
+.small { font-size: 13px; }
+.status { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+.status b { display: block; }
+.status span { color: var(--muted); font-size: 13px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; background: #555; flex: none; }
+.dot.on { background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+.dot.off { background: #ff8aa0; }
+footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 18px; }
+footer a { color: var(--accent2); }
+
+/* sistema a tutto schermo: occupa tutto, anche sotto la tacca dell'iPhone */
+#os { position: fixed; inset: 0; background: #000; touch-action: none; user-select: none; -webkit-user-select: none;
+      overflow: hidden; z-index: 10; }
+#os[hidden] { display: none; }
+#screen { position: absolute; inset: 0; width: 100vw; height: 100dvh; background: #000; }
+#status { position: absolute; top: 42%; left: 0; right: 0; text-align: center; color: #fff; font-size: 17px;
+          text-shadow: 0 1px 3px #000; pointer-events: none; padding: 0 24px; }
+#status:empty { display: none; }
+#kbd { position: absolute; left: -1000px; top: 0; width: 10px; height: 10px; opacity: 0; }
+#turn { position: absolute; left: 12px; right: 12px; top: max(12px, env(safe-area-inset-top)); padding: 10px 14px;
+        border-radius: 14px; background: rgba(29, 20, 48, .92); border: 1px solid var(--line); color: var(--text);
+        font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+#turn[hidden] { display: none; }
+#turn button { width: auto; margin: 0; padding: 6px 14px; font-size: 14px; }
+/* pallino EG: si trascina dove dà meno fastidio, un tocco apre il menu */
+#bubble { position: absolute; right: 14px; bottom: max(20px, env(safe-area-inset-bottom)); width: 52px; height: 52px;
+          margin: 0; padding: 0; border-radius: 50%; font-weight: 900; font-size: 16px; letter-spacing: -1px;
+          background: linear-gradient(135deg, rgba(176, 124, 255, .85), rgba(46, 17, 112, .85));
+          border: 1px solid rgba(255, 255, 255, .35); box-shadow: 0 6px 18px rgba(0, 0, 0, .45);
+          backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: .8; touch-action: none; }
+#menu { position: absolute; right: 14px; bottom: calc(max(20px, env(safe-area-inset-bottom)) + 62px); width: 300px;
+        max-width: calc(100vw - 28px); max-height: calc(100dvh - 110px); overflow: auto;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+        padding: 8px; border-radius: 18px; background: rgba(29, 20, 48, .94); border: 1px solid var(--line);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+#menu[hidden] { display: none; }
+#menu button { margin: 0; padding: 10px 8px; font-size: 14px; background: #2a1d45; text-align: left; }
+#menu button.quit { background: #5a1f33; }
