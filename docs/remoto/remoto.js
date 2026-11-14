@@ -185,11 +185,22 @@ async function addCloudEntries(list) {
     const dot = div.querySelector(".dot"), span = div.querySelector("span");
     const ctl = new AbortController();
     setTimeout(() => ctl.abort(), 6000);
+    const btn = div.querySelector("button");
+    btn.onclick = () => connectCloud(c);
     fetch(c.stato, { cache: "no-store", signal: ctl.signal }).then((r) => r.json()).then((s) => {
       if (!s.ok) throw new Error();
       dot.classList.add("on"); span.textContent = "senza PC · acceso";
-    }).catch(() => { dot.classList.add("busy"); span.textContent = "senza PC · in pausa, si sveglia quando lo apri (circa 1 minuto)"; });
-    div.querySelector("button").onclick = () => connectCloud(c);
+    }).catch(() => {
+      dot.classList.add("off");
+      if (/^https:\/\/github\.com\//.test(c.accendi || "")) {
+        // GitHub Codespaces: si accende dalla pagina di GitHub (poi torna qui e premi Apri)
+        span.textContent = "senza PC · spento: premi Accendi, aspetta che GitHub lo apra, poi torna qui";
+        btn.textContent = "Accendi";
+        btn.onclick = () => { window.open(c.accendi, "_blank", "noopener"); btn.textContent = "Apri"; btn.onclick = () => connectCloud(c); };
+      } else {
+        span.textContent = "senza PC · spento o non raggiungibile";
+      }
+    });
   });
 }
 
@@ -204,12 +215,14 @@ async function connectCloud(c) {
   setStatus("Apro " + (c.name || "EMAGIAKU OS online") + "...");
   try {
     if (!window.EGCloud) await new Promise((ok) => window.addEventListener("egcloud-ready", ok, { once: true }));
-    // sveglia lo Space se dorme (la prima volta puo' servire circa un minuto)
+    // aspetta che sia pronto (appena acceso il desktop impiega circa un minuto)
+    let pronto = false;
     for (let i = 0; i < 30 && CUR; i++) {
-      try { const s = await (await fetch(c.stato, { cache: "no-store" })).json(); if (s.ok) break; } catch (e) { /* dorme */ }
-      setStatus("Sto svegliando EMAGIAKU OS online... (" + (i * 4) + " s)");
+      try { const s = await (await fetch(c.stato, { cache: "no-store" })).json(); if (s.ok) { pronto = true; break; } } catch (e) { /* spento */ }
+      setStatus("Aspetto EMAGIAKU OS online... (" + (i * 4) + " s)");
       await sleep(4000);
     }
+    if (CUR && !pronto) throw new Error("EMAGIAKU OS online e' spento: premi Accendi nell'elenco e riprova quando GitHub l'ha aperto.");
     if (!CUR) return;
     const jwt = (await EG.call("POST", "/account/jwts", {})).jwt;   // vale 15 minuti, serve solo per entrare
     setStatus("Entro con il tuo Account EMAGIAKU...");

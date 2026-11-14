@@ -1,4 +1,4 @@
-# EMAGIAKU OS online - il sistema EMAGIAKU GLASS OS dentro un contenitore (Hugging Face Spaces, gratis).
+# EMAGIAKU OS online - il sistema EMAGIAKU GLASS OS dentro un contenitore (GitHub Codespaces, vedi .devcontainer).
 # Si usa SOLO da EG Remoto con il proprio Account EMAGIAKU (vedi gate.py).
 # Il programma EMAGIAKU arriva dall'ultimo aggiornamento EG firmato: la firma viene controllata qui sotto.
 FROM archlinux:latest
@@ -11,7 +11,7 @@ RUN echo "Server=https://archive.archlinux.org/repos/$EG_ARCH_DATE/\$repo/os/\$a
     pacman -Syyuu --noconfirm --needed --disable-sandbox \
       plasma-desktop plasma-workspace plasma-x11-session kwin-x11 breeze kde-gtk-config kvantum xdg-user-dirs xdg-utils \
       tigervnc dbus python python-pyqt6 python-aiohttp python-xlib python-cryptography libnotify \
-      firefox noto-fonts noto-fonts-emoji ttf-liberation poppler openssl curl ca-certificates sudo && \
+      firefox noto-fonts noto-fonts-emoji ttf-liberation poppler openssl curl ca-certificates sudo git && \
     pacman -Scc --noconfirm && rm -rf /var/cache/pacman/pkg/* && \
     sed -i 's/^#it_IT.UTF-8/it_IT.UTF-8/; s/^#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen && locale-gen && \
     echo "LANG=it_IT.UTF-8" > /etc/locale.conf

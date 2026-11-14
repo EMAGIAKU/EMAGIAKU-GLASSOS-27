@@ -1,0 +1,21 @@
+{
+  // EMAGIAKU OS online su GitHub Codespaces (gratis: 60 ore al mese con 2 core).
+  // Si usa dalla web app EG Remoto; entra solo chi e' nel segreto Codespaces EG_UTENTI.
+  "name": "EMAGIAKU OS online",
+  "build": {
+    "dockerfile": "../cloud/Dockerfile",
+    "context": "../cloud"
+  },
+  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  "remoteUser": "eg",
+  "containerUser": "eg",
+  "overrideCommand": true,
+  "postStartCommand": "nohup /opt/eg-cloud/start.sh > /tmp/eg-cloud.log 2>&1 &",
+  "forwardPorts": [7860],
+  "portsAttributes": {
+    "7860": { "label": "EMAGIAKU OS online", "onAutoForward": "silent" }
+  },
+  "secrets": {
+    "EG_UTENTI": { "description": "Email degli Account EMAGIAKU che possono entrare (separate da virgola)" }
+  }
+}
