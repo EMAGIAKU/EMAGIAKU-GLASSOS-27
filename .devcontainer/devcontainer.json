@@ -11,7 +11,8 @@
   "containerUser": "eg",
   "overrideCommand": true,
   // setsid: il sistema resta acceso anche quando il comando di avvio finisce
-  "postStartCommand": "pgrep -f gate.py >/dev/null || setsid -f /opt/eg-cloud/start.sh > /tmp/eg-cloud.log 2>&1 < /dev/null",
+  // (se e' gia' acceso, start.sh esce da solo)
+  "postStartCommand": "setsid -f /opt/eg-cloud/start.sh > /tmp/eg-cloud.log 2>&1 < /dev/null",
   "forwardPorts": [7860],
   "portsAttributes": {
     "7860": { "label": "EMAGIAKU OS online", "onAutoForward": "silent" }

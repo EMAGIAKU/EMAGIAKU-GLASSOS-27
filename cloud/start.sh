@@ -1,6 +1,8 @@
 #!/bin/bash
 # EMAGIAKU OS online: schermo virtuale (solo interno) + desktop EMAGIAKU (Plasma X11) + cancello con l'Account EMAGIAKU.
 set -u
+# gia' acceso (es. Codespaces lo riavvia due volte)? Allora non faccio niente
+if curl -s -m 2 http://127.0.0.1:${PORT:-7860}/stato >/dev/null 2>&1; then exit 0; fi
 export DISPLAY=:1
 export XDG_RUNTIME_DIR=/tmp/runtime-eg
 mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR"
