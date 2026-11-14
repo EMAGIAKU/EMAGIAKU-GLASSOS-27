@@ -12,10 +12,12 @@
   "overrideCommand": true,
   // setsid: il sistema resta acceso anche quando il comando di avvio finisce
   // (se e' gia' acceso, start.sh esce da solo)
-  "postStartCommand": "setsid -f /opt/eg-cloud/start.sh > /tmp/eg-cloud.log 2>&1 < /dev/null",
+  // poi la porta 7860 torna pubblica da sola (a ogni accensione GitHub la rimette privata)
+  "postStartCommand": "setsid -f /opt/eg-cloud/start.sh > /tmp/eg-cloud.log 2>&1 < /dev/null; setsid -f /opt/eg-cloud/porta-pubblica.sh > /tmp/eg-porta.log 2>&1 < /dev/null",
   "forwardPorts": [7860],
   "portsAttributes": {
-    "7860": { "label": "EMAGIAKU OS online", "onAutoForward": "silent" }
+    "7860": { "label": "EMAGIAKU OS online", "onAutoForward": "silent" },
+    "5900": { "label": "schermo interno (non serve fuori)", "onAutoForward": "ignore" }
   },
   "secrets": {
     "EG_UTENTI": { "description": "Email degli Account EMAGIAKU che possono entrare (separate da virgola)" }

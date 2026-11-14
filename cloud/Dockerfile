@@ -11,7 +11,7 @@ RUN echo "Server=https://archive.archlinux.org/repos/$EG_ARCH_DATE/\$repo/os/\$a
     pacman -Syyuu --noconfirm --needed --disable-sandbox \
       plasma-desktop plasma-workspace plasma-x11-session kwin-x11 breeze kde-gtk-config kvantum xdg-user-dirs xdg-utils \
       tigervnc dbus python python-pyqt6 python-aiohttp python-xlib python-cryptography libnotify \
-      firefox noto-fonts noto-fonts-emoji ttf-liberation poppler openssl curl ca-certificates sudo git && \
+      firefox noto-fonts noto-fonts-emoji ttf-liberation poppler openssl curl ca-certificates sudo git github-cli && \
     pacman -Scc --noconfirm && rm -rf /var/cache/pacman/pkg/* && \
     sed -i 's/^#it_IT.UTF-8/it_IT.UTF-8/; s/^#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen && locale-gen && \
     echo "LANG=it_IT.UTF-8" > /etc/locale.conf
@@ -39,7 +39,7 @@ RUN set -e; cd /tmp; B=https://raw.githubusercontent.com/EMAGIAKU/EMAGIAKU-GLASS
     rm -f /etc/xdg/autostart/emagiaku-remote.desktop /etc/xdg/autostart/emagiaku-update.desktop \
           /etc/skel/.config/autostart/emagiaku-game-boost.desktop /etc/skel/.config/autostart/emagiaku-pro-promo.desktop \
           /opt/eg-cloud/skel/.config/autostart/emagiaku-pro-promo.desktop; \
-    chmod 755 /usr/bin/emagiaku-* /opt/eg-cloud/start.sh
+    chmod 755 /usr/bin/emagiaku-* /opt/eg-cloud/start.sh /opt/eg-cloud/porta-pubblica.sh
 
 # niente blocco schermo: online l'utente non ha password (a entrare ci pensa il cancello con l'Account EMAGIAKU),
 # quindi un blocco lo chiuderebbe fuori. Regole "kiosk" di KDE per tutto il sistema.
