@@ -17,6 +17,8 @@ for i in $(seq 1 50); do [ -e /tmp/.X11-unix/X1 ] && break; sleep 0.2; done
 # desktop: riparte da solo se si chiude (es. "Esci" dal menu)
 (
   while true; do
+    # mentre ripulisci.sh pulisce il desktop (postazione pubblica) aspetto
+    while [ -e /tmp/eg-reset.lock ]; do sleep 1; done
     dbus-run-session startplasma-x11 >/tmp/plasma.log 2>&1
     sleep 2
   done

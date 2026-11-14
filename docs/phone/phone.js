@@ -110,10 +110,12 @@ async function system() {
   return SYS;
 }
 
+let LAST = null;   // ultimo stato letto (in_uso: c'e' gia' un'altra persona, postazione pubblica)
 async function isOn(c) {
   const ctl = new AbortController();
   setTimeout(() => ctl.abort(), 6000);
-  try { return !!(await (await fetch(c.stato, { cache: "no-store", signal: ctl.signal })).json()).ok; } catch (e) { return false; }
+  try { LAST = await (await fetch(c.stato, { cache: "no-store", signal: ctl.signal })).json(); return !!LAST.ok; }
+  catch (e) { LAST = null; return false; }
 }
 
 async function home(autoOpen = true) {
@@ -134,15 +136,24 @@ async function home(autoOpen = true) {
   EG.$("b_open").disabled = false;
   if (await isOn(c)) {
     dot.classList.add("on");
+    if (LAST && LAST.in_uso) {
+      EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' in uso";
+      EG.$("st_text").textContent = "Lo sta usando un'altra persona (uno alla volta). Riprova tra qualche minuto.";
+      return;
+    }
     EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' acceso";
-    EG.$("st_text").textContent = "Si apre a tutto schermo. Tocca il pallino EG per tastiera e menu.";
+    EG.$("st_text").textContent = "Si apre a tutto schermo. Tocca il pallino EG per tastiera e menu. Quando esci, " +
+      "dopo un minuto e mezzo il desktop viene ripulito (file e account cancellati).";
     if (autoOpen && !sessionStorage.getItem("eg_phone_closed")) openOS();
   } else {
     dot.classList.add("off");
     EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' spento";
-    EG.$("st_text").textContent = "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: su GitHub premi " +
-      "\"Restart codespace\", poi torna qui: si apre da solo appena e' pronto (circa 1-2 minuti).";
-    EG.show("b_on", /^https:\/\/(github\.com|[a-z0-9-]+\.github\.dev)\//.test(c.accendi || ""));
+    EG.$("st_text").textContent = c.funzione ?
+      "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: si apre da solo appena e' pronto (1-2 minuti)." :
+      "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: su GitHub premi \"Restart codespace\", " +
+      "poi torna qui: si apre da solo appena e' pronto (circa 1-2 minuti).";
+    EG.$("b_on").textContent = c.funzione ? "Accendi" : "Accendi (si apre GitHub)";
+    EG.show("b_on", !!c.funzione || /^https:\/\/(github\.com|[a-z0-9-]+\.github\.dev)\//.test(c.accendi || ""));
   }
 }
 
@@ -280,12 +291,18 @@ EG.$("b_verify_again").onclick = async (e) => { EG.busy(e.target, true); await s
 EG.$("b_mfa").onclick = (e) => finishMfa(e.target);
 EG.$("b_mfa_out").onclick = async () => { await EG.logoutLocal(); view("login"); };
 EG.$("b_open").onclick = () => { sessionStorage.removeItem("eg_phone_closed"); openOS(); };
-EG.$("b_on").onclick = async () => {
+EG.$("b_on").onclick = async (e) => {
   const c = await system();
   if (!c) return;
-  window.open(c.accendi, "_blank", "noopener");     // GitHub accende il Codespace
+  EG.msg("");
+  if (!window.EGCloud) await new Promise((ok) => window.addEventListener("egcloud-ready", ok, { once: true }));
+  EG.busy(e.target, true, "Accendo...");
+  const r = await EGCloud.accendi(c);                // per tutti gli account autorizzati, senza GitHub
+  EG.busy(e.target, false);
+  if (r.link) window.open(c.accendi, "_blank", "noopener");   // vecchio modo (solo il proprietario)
+  else if (!r.ok) { EG.msg(r.errore, "bad"); return; }
   sessionStorage.removeItem("eg_phone_closed");
-  openOS();                                          // qui intanto aspetto che sia pronto e lo apro da solo
+  openOS();                                          // aspetto che sia pronto e lo apro da solo
 };
 EG.$("b_out").onclick = async () => { await EG.logoutLocal(); ME = null; view("login"); };
 start();

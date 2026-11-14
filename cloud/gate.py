@@ -3,7 +3,9 @@
 L'unica porta aperta verso internet (7860). Lo schermo virtuale (VNC) ascolta solo dentro il contenitore:
 per arrivarci bisogna aprire /ws e mandare come PRIMO messaggio un JWT dell'Account EMAGIAKU (Appwrite).
 Il JWT viene controllato da Appwrite; l'account deve avere l'email verificata ed essere nell'elenco
-EG_UTENTI (segreto dello Space: email o ID separati da virgola). Elenco vuoto = non entra nessuno.
+EG_UTENTI (segreto Codespaces: email o ID separati da virgola). Elenco vuoto = non entra nessuno.
+EG_UTENTI = "*" (27.22): aperto a TUTTI gli Account EMAGIAKU con email confermata, come una postazione
+pubblica: una persona alla volta e, quando esce, il desktop viene ripulito (ripulisci.sh).
 """
 import asyncio
 import json
@@ -16,8 +18,13 @@ ENDPOINT = "https://fra.cloud.appwrite.io/v1"
 PROJECT = "6af5ebe90008bba8da64"
 VNC = ("127.0.0.1", 5900)
 ALLOWED = {x.strip().lower() for x in os.environ.get("EG_UTENTI", "").split(",") if x.strip()}
+PUBLIC = "*" in ALLOWED          # postazione pubblica: tutti, uno alla volta, desktop ripulito all'uscita
 FAILS = {}            # ip -> [tempi dei tentativi sbagliati]
 STARTED = time.time()
+# chi sta usando il sistema adesso: {"uid", "conns": numero di collegamenti aperti, "reset": attesa pulizia}
+CURRENT = {"uid": None, "conns": 0, "reset": None}
+RESET_SCRIPT = "/opt/eg-cloud/ripulisci.sh"
+RESET_DELAY = 90      # secondi: chi preme "Ricollega" o perde la rete per un attimo non perde il lavoro
 
 PAGE = """<!doctype html><html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>EMAGIAKU OS online</title><body style="font-family:sans-serif;background:#120c1c;color:#eee;padding:24px">
@@ -51,9 +58,47 @@ async def check_jwt(jwt):
         return None, "Prima conferma la tua email (EG Remoto te lo chiede dopo l'accesso)."
     if not ALLOWED:
         return None, "Nessun account e' ancora autorizzato su questo EMAGIAKU OS online."
+    if PUBLIC:
+        return user, ""
     if (user.get("email", "").lower() not in ALLOWED) and (user.get("$id", "").lower() not in ALLOWED):
         return None, "Questo account non e' autorizzato su questo EMAGIAKU OS online."
     return user, ""
+
+
+# ---------------------------------------------------------------- una persona alla volta
+def busy_for(user):
+    """Messaggio se il sistema e' occupato da un altro account ('' se si puo' entrare)."""
+    if PUBLIC and CURRENT["uid"] and CURRENT["uid"] != user.get("$id"):
+        return "EMAGIAKU OS online e' in uso da un'altra persona: riprova tra qualche minuto."
+    return ""
+
+
+def enter(user):
+    if CURRENT["reset"]:
+        CURRENT["reset"].cancel()              # e' tornato (Ricollega): niente pulizia
+        CURRENT["reset"] = None
+    CURRENT["uid"] = user.get("$id")
+    CURRENT["conns"] += 1
+
+
+def leave(user):
+    CURRENT["conns"] = max(0, CURRENT["conns"] - 1)
+    if CURRENT["conns"] == 0 and CURRENT["uid"] == user.get("$id"):
+        CURRENT["reset"] = asyncio.get_running_loop().call_later(
+            RESET_DELAY, lambda: asyncio.ensure_future(free_and_reset(user)))
+
+
+async def free_and_reset(user):
+    CURRENT["reset"] = None
+    if CURRENT["conns"]:
+        return
+    forget_account(user)
+    if PUBLIC and os.path.exists(RESET_SCRIPT):
+        proc = await asyncio.create_subprocess_exec(RESET_SCRIPT, stdout=asyncio.subprocess.DEVNULL,
+                                                    stderr=asyncio.subprocess.DEVNULL)
+        await proc.wait()
+        print("EMAGIAKU OS online: desktop ripulito dopo l'uscita", flush=True)
+    CURRENT["uid"] = None                      # libero per il prossimo
 
 
 # comandi che l'app puo' chiedere dopo l'accesso: solo questi, niente comandi liberi
@@ -138,7 +183,8 @@ async def index(_req):
 
 
 async def stato(_req):
-    return web.json_response({"ok": True, "nome": "EMAGIAKU OS online", "acceso_da_s": int(time.time() - STARTED)},
+    return web.json_response({"ok": True, "nome": "EMAGIAKU OS online", "acceso_da_s": int(time.time() - STARTED),
+                              "in_uso": bool(PUBLIC and CURRENT["uid"])},
                              headers={"Access-Control-Allow-Origin": "*"})
 
 
@@ -166,17 +212,23 @@ async def ws_handler(req):
         await ws.send_str(json.dumps({"ok": False, "errore": err}))
         await ws.close()
         return ws
-    print("EMAGIAKU OS online: entra %s" % user.get("email"), flush=True)
-    try:
-        write_account(user, json.loads(first.data).get("jwt", ""))   # le app EG trovano gia' l'account
-    except OSError as e:
-        print("EMAGIAKU OS online: account non salvato: %s" % e, flush=True)
+    busy = busy_for(user)
+    if busy:
+        await ws.send_str(json.dumps({"ok": False, "errore": busy}))
+        await ws.close()
+        return ws
     try:
         reader, writer = await asyncio.open_connection(*VNC)
     except OSError:
         await ws.send_str(json.dumps({"ok": False, "errore": "Il desktop si sta ancora avviando: riprova tra poco."}))
         await ws.close()
         return ws
+    enter(user)
+    print("EMAGIAKU OS online: entra %s" % user.get("email"), flush=True)
+    try:
+        write_account(user, json.loads(first.data).get("jwt", ""))   # le app EG trovano gia' l'account
+    except OSError as e:
+        print("EMAGIAKU OS online: account non salvato: %s" % e, flush=True)
     await ws.send_str(json.dumps({"ok": True}))
 
     async def vnc_to_ws():
@@ -204,7 +256,7 @@ async def ws_handler(req):
             t.cancel()
         writer.close()
         await ws.close()
-        forget_account(user)                 # uscito dall'app: il sistema online dimentica l'account
+        leave(user)        # dopo 90 s senza ritorno: account dimenticato (e desktop ripulito se pubblico)
         print("EMAGIAKU OS online: esce %s" % user.get("email"), flush=True)
     return ws
 

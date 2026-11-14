@@ -192,8 +192,20 @@ async function addCloudEntries(list) {
       dot.classList.add("on"); span.textContent = "senza PC · acceso";
     }).catch(() => {
       dot.classList.add("off");
-      // GitHub Codespaces: l'indirizzo del Codespace (…github.dev) lo accende direttamente
-      if (/^https:\/\/(github\.com|[a-z0-9-]+\.github\.dev)\//.test(c.accendi || "")) {
+      if (c.funzione) {
+        // accensione per tutti gli account autorizzati (funzione Appwrite), poi si apre da solo
+        span.textContent = "senza PC · spento: premi Accendi (si apre da solo in 1-2 minuti)";
+        btn.textContent = "Accendi";
+        btn.onclick = async () => {
+          if (!window.EGCloud) await new Promise((ok) => window.addEventListener("egcloud-ready", ok, { once: true }));
+          EG.busy(btn, true, "Accendo...");
+          const r = await EGCloud.accendi(c);
+          EG.busy(btn, false);
+          if (!r.ok) { EG.msg(r.errore || "Accensione non riuscita.", "bad"); return; }
+          connectCloud(c);                      // aspetta che sia pronto e lo apre
+        };
+      } else if (/^https:\/\/(github\.com|[a-z0-9-]+\.github\.dev)\//.test(c.accendi || "")) {
+        // vecchio modo: solo il proprietario del Codespace puo' accenderlo da GitHub
         // GitHub Codespaces: si accende dalla pagina di GitHub (poi torna qui e premi Apri)
         span.textContent = "senza PC · spento: premi Accendi, aspetta che GitHub lo apra, poi torna qui";
         btn.textContent = "Accendi";
@@ -218,7 +230,7 @@ async function connectCloud(c) {
     if (!window.EGCloud) await new Promise((ok) => window.addEventListener("egcloud-ready", ok, { once: true }));
     // aspetta che sia pronto (appena acceso il desktop impiega circa un minuto)
     let pronto = false;
-    for (let i = 0; i < 30 && CUR; i++) {
+    for (let i = 0; i < 60 && CUR; i++) {               // fino a 4 minuti (accensione + desktop)
       try { const s = await (await fetch(c.stato, { cache: "no-store" })).json(); if (s.ok) { pronto = true; break; } } catch (e) { /* spento */ }
       setStatus("Aspetto EMAGIAKU OS online... (" + (i * 4) + " s)");
       await sleep(4000);

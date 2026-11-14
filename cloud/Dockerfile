@@ -39,7 +39,7 @@ RUN set -e; cd /tmp; B=https://raw.githubusercontent.com/EMAGIAKU/EMAGIAKU-GLASS
     rm -f /etc/xdg/autostart/emagiaku-remote.desktop /etc/xdg/autostart/emagiaku-update.desktop \
           /etc/skel/.config/autostart/emagiaku-game-boost.desktop /etc/skel/.config/autostart/emagiaku-pro-promo.desktop \
           /opt/eg-cloud/skel/.config/autostart/emagiaku-pro-promo.desktop; \
-    chmod 755 /usr/bin/emagiaku-* /opt/eg-cloud/start.sh /opt/eg-cloud/porta-pubblica.sh
+    chmod 755 /usr/bin/emagiaku-* /opt/eg-cloud/start.sh /opt/eg-cloud/porta-pubblica.sh /opt/eg-cloud/ripulisci.sh
 
 # niente blocco schermo: online l'utente non ha password (a entrare ci pensa il cancello con l'Account EMAGIAKU),
 # quindi un blocco lo chiuderebbe fuori. Regole "kiosk" di KDE per tutto il sistema.

@@ -65,6 +65,20 @@ const EGCloud = {
     sock.onclose = () => { if (!ok) ui.ended(""); };
   },
   active() { return !!rfb; },
+  // accensione per tutti gli account autorizzati: funzione Appwrite "eg-accendi" (vedi cloud/funzione-accendi)
+  async accendi(entry) {
+    if (!entry.funzione) return { ok: false, link: true };
+    try {
+      const r = await window.EG.call("POST", "/functions/" + encodeURIComponent(entry.funzione) + "/executions",
+        { async: false, method: "POST", path: "/" });
+      let body = {};
+      try { body = JSON.parse(r.responseBody || "{}"); } catch (e) { /* risposta non JSON */ }
+      if (body.ok) return { ok: true, messaggio: body.messaggio || "" };
+      return { ok: false, errore: body.errore || "Accensione non riuscita (" + (r.responseStatusCode || "?") + ")." };
+    } catch (e) {
+      return { ok: false, errore: (e && e.message) || "Accensione non riuscita." };
+    }
+  },
   // comandi al cancello (testo): per ora solo il menu EG
   menu() { if (rfb && sock && sock.readyState === 1) sock.send(JSON.stringify({ cmd: "menu" })); },
   text(s) { if (!rfb) return; for (const ch of s) { if (ch === "\n") tap(K.Enter); else tap(keysymOf(ch)); } },
