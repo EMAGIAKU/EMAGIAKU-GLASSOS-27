@@ -22,4 +22,10 @@ for i in $(seq 1 50); do [ -e /tmp/.X11-unix/X1 ] && break; sleep 0.2; done
   done
 ) &
 
+# Codespaces: a ogni accensione GitHub rimette la porta 7860 "Privata"; la rendo di nuovo pubblica
+# (parte da qui perche' i processi lanciati da postStartCommand a volte vengono chiusi)
+if [ -n "${CODESPACE_NAME:-}" ] && [ -x /opt/eg-cloud/porta-pubblica.sh ]; then
+  ( /opt/eg-cloud/porta-pubblica.sh > /tmp/eg-porta.log 2>&1 & )
+fi
+
 exec python /opt/eg-cloud/gate.py
