@@ -1,8 +1,8 @@
 {
- "version": "27.17",
- "notes": "Arriva EG Remoto: usa il PC da telefono, tablet o Meta Quest.\n\n**Novita' di EMAGIAKU GLASS OS 27.17**\n\n- **Accesso remoto** (EG Impostazioni > Accesso remoto): attiva \"Permetti l'accesso remoto a questo PC\" e\n  usalo con la web app **EG Remoto** da telefono, tablet o Meta Quest: vedi lo schermo e usi mouse e tastiera.\n  La prima volta premi \"Installa i componenti\" (circa 10 MB).\n- Funziona solo con il **tuo Account EMAGIAKU** (anche con passkey e verifica in due passaggi). Il collegamento\n  e' cifrato e va diretto dal PC al telefono. Quando qualcuno e' collegato compare l'avviso \"Connessione remota\n  attiva\" con il pulsante **Disconnetti**.\n- La web app si installa senza store: https://emagiaku.github.io/EMAGIAKU-GLASSOS-27/remoto/\n  (Android: Chrome > Installa app; iPhone: Safari > Condividi > Aggiungi a schermata Home; Meta Quest: dal browser).\n- Il PC deve restare acceso con il tuo utente aperto. Con alcune reti molto chiuse il collegamento diretto puo'\n  non riuscire.\n",
- "file": "emagiaku-glass-os-27.17.tar.gz",
- "sha256": "8fa0414438a671fad7b7e892fe0f55b6b51b031b09c38a3c7b37c60fedd5d68f",
- "size": 4938369,
+ "version": "27.18",
+ "notes": "EG Remoto: ora si vede lo schermo anche su iPhone e iPad.\n\n**Novita' di EMAGIAKU GLASS OS 27.18**\n\n- **EG Remoto su iPhone/iPad**: prima i comandi arrivavano al PC ma lo schermo restava nero. Ora il PC manda\n  il video in un formato che Safari accetta (H.264 annunciato correttamente, oppure VP8).\n- Se il video non arriva entro pochi secondi, la web app **riprova da sola con un altro formato** e se lo ricorda.\n- Il telefono dice al PC quanto e' grande lo schermo che gli serve: su iPhone/iPad il video e' al massimo\n  1280 pixel di larghezza (piu' fluido e leggero).\n- Nella web app EG Remoto ora puoi anche **creare l'Account EMAGIAKU** (\"Non hai un account? Crealo\").\n",
+ "file": "emagiaku-glass-os-27.18.tar.gz",
+ "sha256": "8954ccbd4c725f83ff86d8f53730533686f1bfcf70eb2f7844d6a2bf4399c394",
+ "size": 4938940,
  "packages": []
 }

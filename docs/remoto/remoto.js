@@ -164,15 +164,42 @@ async function loadDevices() {
 }
 
 // ------------------------------------------------------------- collegamento
-async function connect(dev) {
+// formato video: H.264 (leggero per il PC); se il video non arriva si passa da soli a VP8 e lo si ricorda
+const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+// su iPhone/iPad si parte da VP8 (provato: funziona sempre); altrove H.264, che pesa meno sul PC
+const DEFAULT_CODEC = IS_IOS ? "vp8" : "h264";
+function getCodec() { try { return localStorage.getItem("eg_codec") || DEFAULT_CODEC; } catch (e) { return DEFAULT_CODEC; } }
+function setCodec(c) { try { localStorage.setItem("eg_codec", c); } catch (e) { /* niente */ } }
+let videoWatch = null;
+
+function watchVideo(dev, codec) {
+  clearTimeout(videoWatch);
+  videoWatch = setTimeout(() => {
+    const v = EG.$("video");
+    if (!CUR || CUR.dev !== dev || v.videoWidth > 0) return;
+    if (codec === "h264") {
+      setCodec("vp8");
+      CUR.retry = true;
+      disconnect("");
+      setTimeout(() => connect(dev, "Il video non arrivava: riprovo con un altro formato..."), 800);
+    } else {
+      setStatus("Il PC e' collegato ma il video non arriva. Aggiorna il PC (EG Update) e riprova.");
+    }
+  }, 7000);
+}
+
+async function connect(dev, note) {
   EG.msg("");
-  CUR = { dev, session: hex(16), rows: [] };
+  const codec = getCodec();
+  CUR = { dev, session: hex(16), rows: [], codec };
   EG.show("ui", false);
   EG.show("viewer", true);
-  setStatus("Chiedo al PC \"" + (dev.name || "PC") + "\"...");
+  EG.$("video").srcObject = null;
+  setStatus(note || ("Chiedo al PC \"" + (dev.name || "PC") + "\"..."));
   try {
+    const req = { t: Math.floor(Date.now() / 1000), codec, maxw: IS_IOS ? 1280 : 1920 };
     await EG.call("POST", T_SIG, { rowId: hex(16), permissions: perms(),
-      data: { device: dev.$id, session: CUR.session, kind: "request", data: JSON.stringify({ t: Math.floor(Date.now() / 1000) }) } });
+      data: { device: dev.$id, session: CUR.session, kind: "request", data: JSON.stringify(req) } });
     let offer = null;
     for (let i = 0; i < 40 && CUR && !offer; i++) {     // il PC controlla ogni 3 secondi
       await sleep(1000);
@@ -186,13 +213,14 @@ async function connect(dev) {
     PC = new RTCPeerConnection({ iceServers: STUN });
     PC.ontrack = (ev) => {
       const v = EG.$("video");
-      v.srcObject = ev.streams[0] || new MediaStream([ev.track]);
+      if (ev.track.kind !== "video") return;
+      v.srcObject = (ev.streams && ev.streams[0]) || new MediaStream([ev.track]);
       v.play().catch(() => {});
     };
     PC.ondatachannel = (ev) => { DC = ev.channel; DC.onopen = () => setStatus(""); };
     PC.onconnectionstatechange = () => {
       const s = PC && PC.connectionState;
-      if (s === "connected") setStatus("");
+      if (s === "connected") { setStatus(""); if (CUR) watchVideo(CUR.dev, CUR.codec); }
       if (s === "failed") disconnect("Collegamento non riuscito: la tua rete potrebbe bloccare il collegamento diretto.");
       if (s === "closed" || s === "disconnected") disconnect("Il PC si e' scollegato.");
     };
@@ -218,6 +246,7 @@ function iceDone(pc, ms) {
 }
 
 function disconnect(reason) {
+  clearTimeout(videoWatch);
   if (PC) { try { PC.close(); } catch (e) { /* gia' chiuso */ } }
   PC = null; DC = null;
   const c = CUR; CUR = null;
