@@ -192,7 +192,8 @@ async function addCloudEntries(list) {
       dot.classList.add("on"); span.textContent = "senza PC · acceso";
     }).catch(() => {
       dot.classList.add("off");
-      if (/^https:\/\/github\.com\//.test(c.accendi || "")) {
+      // GitHub Codespaces: l'indirizzo del Codespace (…github.dev) lo accende direttamente
+      if (/^https:\/\/(github\.com|[a-z0-9-]+\.github\.dev)\//.test(c.accendi || "")) {
         // GitHub Codespaces: si accende dalla pagina di GitHub (poi torna qui e premi Apri)
         span.textContent = "senza PC · spento: premi Accendi, aspetta che GitHub lo apra, poi torna qui";
         btn.textContent = "Accendi";

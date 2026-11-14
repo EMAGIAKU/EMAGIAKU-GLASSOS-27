@@ -140,8 +140,9 @@ async function home(autoOpen = true) {
   } else {
     dot.classList.add("off");
     EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' spento";
-    EG.$("st_text").textContent = "Premi Accendi: GitHub lo apre (circa 1 minuto). Poi torna qui e premi Apri.";
-    EG.show("b_on", /^https:\/\/github\.com\//.test(c.accendi || ""));
+    EG.$("st_text").textContent = "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: si apre GitHub, " +
+      "torna qui e si apre da solo appena e' pronto (circa 1-2 minuti).";
+    EG.show("b_on", /^https:\/\/(github\.com|[a-z0-9-]+\.github\.dev)\//.test(c.accendi || ""));
   }
 }
 
@@ -162,9 +163,9 @@ async function openOS() {
   try {
     if (!window.EGCloud) await new Promise((ok) => window.addEventListener("egcloud-ready", ok, { once: true }));
     let on = false;
-    for (let i = 0; i < 30 && OPEN; i++) {
+    for (let i = 0; i < 60 && OPEN; i++) {            // fino a 4 minuti (accensione del Codespace + desktop)
       if (await isOn(c)) { on = true; break; }
-      setStatus("Aspetto che si accenda... (" + (i * 4) + " s)");
+      setStatus("Aspetto che EMAGIAKU GLASS OS si accenda... (" + (i * 4) + " s)");
       await sleep(4000);
     }
     if (!OPEN) return;
@@ -279,6 +280,12 @@ EG.$("b_verify_again").onclick = async (e) => { EG.busy(e.target, true); await s
 EG.$("b_mfa").onclick = (e) => finishMfa(e.target);
 EG.$("b_mfa_out").onclick = async () => { await EG.logoutLocal(); view("login"); };
 EG.$("b_open").onclick = () => { sessionStorage.removeItem("eg_phone_closed"); openOS(); };
-EG.$("b_on").onclick = async () => { const c = await system(); if (c) window.open(c.accendi, "_blank", "noopener"); };
+EG.$("b_on").onclick = async () => {
+  const c = await system();
+  if (!c) return;
+  window.open(c.accendi, "_blank", "noopener");     // GitHub accende il Codespace
+  sessionStorage.removeItem("eg_phone_closed");
+  openOS();                                          // qui intanto aspetto che sia pronto e lo apro da solo
+};
 EG.$("b_out").onclick = async () => { await EG.logoutLocal(); ME = null; view("login"); };
 start();

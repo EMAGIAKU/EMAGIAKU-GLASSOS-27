@@ -1,6 +1,6 @@
 // EG GLASS PHONE - service worker: rende l'app installabile. Prima la rete (aggiornamenti subito), poi la copia salvata.
 // Non conserva mai i dati dell'account (Appwrite e il sistema online passano sempre dalla rete).
-const CACHE = "eg-phone-v1";
+const CACHE = "eg-phone-v2";
 const FILES = ["./", "index.html", "phone.js", "phone.css", "manifest.webmanifest", "icon-192.png", "icon-512.png",
                "apple-touch-icon.png", "../eg.js", "../eg.css", "../remoto/cloud.js", "../remoto/cloud.json"];
 self.addEventListener("install", (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())));
