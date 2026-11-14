@@ -1,3 +1,10 @@
 {
-  "sistemi": []
+  "sistemi": [
+    {
+      "name": "EMAGIAKU OS online",
+      "ws": "wss://urban-space-robot-4gq77jj9g6x3q547-7860.app.github.dev/ws",
+      "stato": "https://urban-space-robot-4gq77jj9g6x3q547-7860.app.github.dev/stato",
+      "accendi": "https://github.com/codespaces"
+    }
+  ]
 }
