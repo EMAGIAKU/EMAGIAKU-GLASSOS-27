@@ -64,6 +64,32 @@ COMMANDS = {
 }
 
 
+# Account EMAGIAKU gia' collegato nel sistema online (27.21): il JWT di chi entra va nel file account
+# delle app EG (egcloud usa X-Appwrite-JWT). L'app lo rinnova ogni 10 minuti; all'uscita si cancella.
+ACCOUNT_FILE = os.path.join(os.path.expanduser("~"), ".config", "emagiaku", "account.json")
+
+
+def write_account(user, jwt):
+    os.makedirs(os.path.dirname(ACCOUNT_FILE), exist_ok=True)
+    data = {"email": user.get("email", ""), "uid": user.get("$id", ""), "session": "eg-phone", "jwt": jwt,
+            "verified": bool(user.get("emailVerification")), "name": user.get("name", "")}
+    tmp = ACCOUNT_FILE + ".tmp"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        json.dump(data, f)
+    os.replace(tmp, ACCOUNT_FILE)
+
+
+def forget_account(user):
+    try:
+        with open(ACCOUNT_FILE, encoding="utf-8") as f:
+            if json.load(f).get("uid") != user.get("$id"):
+                return                       # nel frattempo e' entrato un altro account: non lo tocco
+        os.remove(ACCOUNT_FILE)
+    except (OSError, ValueError):
+        pass
+
+
 def plasma_bus():
     """Indirizzo D-Bus della sessione Plasma (preso dal processo plasmashell)."""
     for pid in os.listdir("/proc"):
@@ -82,11 +108,19 @@ def plasma_bus():
     return ""
 
 
-async def command(text):
+async def command(text, user=None):
     try:
-        cmd = COMMANDS.get(json.loads(text).get("cmd"))
+        msg = json.loads(text)
+        name = msg.get("cmd")
     except (ValueError, AttributeError):
         return
+    if name == "jwt" and user:
+        # rinnovo del pass: valido solo se e' dello STESSO account entrato dal cancello
+        new_user, _err = await check_jwt(str(msg.get("jwt", "")))
+        if new_user and new_user.get("$id") == user.get("$id"):
+            write_account(new_user, msg["jwt"])
+        return
+    cmd = COMMANDS.get(name)
     bus = plasma_bus()
     if not cmd or not bus:
         return
@@ -134,6 +168,10 @@ async def ws_handler(req):
         return ws
     print("EMAGIAKU OS online: entra %s" % user.get("email"), flush=True)
     try:
+        write_account(user, json.loads(first.data).get("jwt", ""))   # le app EG trovano gia' l'account
+    except OSError as e:
+        print("EMAGIAKU OS online: account non salvato: %s" % e, flush=True)
+    try:
         reader, writer = await asyncio.open_connection(*VNC)
     except OSError:
         await ws.send_str(json.dumps({"ok": False, "errore": "Il desktop si sta ancora avviando: riprova tra poco."}))
@@ -154,7 +192,7 @@ async def ws_handler(req):
                 writer.write(msg.data)
                 await writer.drain()
             elif msg.type == WSMsgType.TEXT:
-                await command(msg.data)          # comandi dell'app (solo un elenco fisso, vedi COMMANDS)
+                await command(msg.data, user)    # comandi dell'app (solo un elenco fisso, vedi COMMANDS)
             elif msg.type in (WSMsgType.CLOSE, WSMsgType.ERROR):
                 break
 
@@ -166,6 +204,7 @@ async def ws_handler(req):
             t.cancel()
         writer.close()
         await ws.close()
+        forget_account(user)                 # uscito dall'app: il sistema online dimentica l'account
         print("EMAGIAKU OS online: esce %s" % user.get("email"), flush=True)
     return ws
 

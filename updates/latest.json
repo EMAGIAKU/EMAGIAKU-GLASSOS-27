@@ -1,8 +1,8 @@
 {
- "version": "27.20",
- "notes": "EMAGIAKU GLASS OS 27.20: nuovo stile piu' rotondo, chiavi nell'account e sistema pronto per KDE 6.8.\n\n**Novita' di EMAGIAKU GLASS OS 27.20**\n\n- **Nuovo stile, piu' rotondo (tipo macOS)**: tutte le app EG hanno angoli piu' ampi, pulsanti \"a pillola\",\n  barre di scorrimento sottili e arrotondate; le finestre non hanno piu' il bordo e hanno tutti e quattro\n  gli angoli arrotondati.\n- **Nuova schermata di avvio, stile macOS**: nero pieno, logo EG e scritte bianche, barra di caricamento\n  sottile (niente piu' viola).\n- **Chiavi PRO / STUDY collegate all'Account EMAGIAKU**: quando attivi una chiave con l'account collegato,\n  viene salvata nel tuo account (in modo privato). Su un altro PC o dopo una reinstallazione basta entrare con\n  l'Account EMAGIAKU e l'edizione si attiva da sola. \"Disattiva\" la toglie anche dall'account.\n  Se avevi gia' una chiave attiva, con questo aggiornamento viene salvata nell'account al prossimo accesso.\n- **Pronto per KDE Plasma 6.8 (solo Wayland)**: le impostazioni di mouse e touchpad funzionano anche in Wayland.\n- **Nuova ISO 27.20** (per chi installa da zero): contiene gia' tutto questo e i componenti di EG Remoto.\n- **EMAGIAKU OS online / EG GLASS PHONE**: anche il sistema online passa alla 27.20.\n",
- "file": "emagiaku-glass-os-27.20.tar.gz",
- "sha256": "e0c38c78336d089788c42ae5dd011bdf908aa1a5fc76b3bacd1b1d45bd9f9f39",
- "size": 4944309,
+ "version": "27.21",
+ "notes": "EG GLASS PHONE: nel sistema online sei gia' collegato al tuo Account EMAGIAKU.\n\n**Novita' di EMAGIAKU GLASS OS 27.21**\n\n- **Account gia' collegato in EMAGIAKU OS online**: quando entri da EG GLASS PHONE o da EG Remoto, dentro il\n  sistema online le app EG (Impostazioni > Account, chiavi PRO/STUDY, ...) usano gia' il tuo Account EMAGIAKU:\n  niente secondo accesso. Il collegamento si rinnova da solo mentre sei dentro e sparisce quando esci.\n  \"Esci dall'account\" dentro il sistema online non scollega l'app sul telefono.\n- **Accensione piu' semplice**: a ogni riaccensione il sistema online torna raggiungibile da solo\n  (prima bisognava rendere pubblica la porta a mano). Dopo \"Accendi\" premi \"Restart codespace\" su GitHub.\n",
+ "file": "emagiaku-glass-os-27.21.tar.gz",
+ "sha256": "7f8d338de6543936499d905091cdb4d217238aace56d2dfe885ec6e304085c3f",
+ "size": 4944386,
  "packages": []
 }

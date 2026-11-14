@@ -16,7 +16,7 @@ const CODE = { Super: "MetaLeft", Meta: "MetaLeft", Control: "ControlLeft", Alt:
   PageUp: "PageUp", PageDown: "PageDown" };
 for (let i = 1; i <= 12; i++) CODE["F" + i] = "F" + i;
 
-let rfb = null, sock = null;
+let rfb = null, sock = null, renew = null;
 
 function keysymOf(k) {
   if (K[k]) return K[k];
@@ -47,6 +47,14 @@ const EGCloud = {
       rfb.resizeSession = false;
       rfb.focusOnClick = false;
       rfb.addEventListener("connect", () => ui.status(""));
+      // l'account resta collegato anche dentro il sistema: il pass (JWT, 15 minuti) si rinnova ogni 10
+      clearInterval(renew);
+      renew = setInterval(async () => {
+        try {
+          const j = (await window.EG.call("POST", "/account/jwts", {})).jwt;
+          if (sock && sock.readyState === 1) sock.send(JSON.stringify({ cmd: "jwt", jwt: j }));
+        } catch (e) { /* riprovo al prossimo giro */ }
+      }, 10 * 60 * 1000);
       rfb.addEventListener("disconnect", (e) => {
         const clean = e.detail && e.detail.clean;
         rfb = null; sock = null;
@@ -68,6 +76,7 @@ const EGCloud = {
     m.reverse().forEach((x) => rfb.sendKey(K[x], CODE[x], false));
   },
   stop() {
+    clearInterval(renew);
     try { if (rfb) rfb.disconnect(); } catch (e) { /* gia' chiuso */ }
     try { if (sock && sock.readyState <= 1) sock.close(); } catch (e) { /* gia' chiuso */ }
     rfb = null; sock = null;

@@ -140,8 +140,8 @@ async function home(autoOpen = true) {
   } else {
     dot.classList.add("off");
     EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' spento";
-    EG.$("st_text").textContent = "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: si apre GitHub, " +
-      "torna qui e si apre da solo appena e' pronto (circa 1-2 minuti).";
+    EG.$("st_text").textContent = "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: su GitHub premi " +
+      "\"Restart codespace\", poi torna qui: si apre da solo appena e' pronto (circa 1-2 minuti).";
     EG.show("b_on", /^https:\/\/(github\.com|[a-z0-9-]+\.github\.dev)\//.test(c.accendi || ""));
   }
 }
