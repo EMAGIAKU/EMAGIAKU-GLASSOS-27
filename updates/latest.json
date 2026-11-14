@@ -1,8 +1,8 @@
 {
- "version": "27.19",
- "notes": "EMAGIAKU OS online: usa il sistema dall'app EG Remoto anche senza PC. E EG Remoto pronto per KDE 6.8.\n\n**Novita' di EMAGIAKU GLASS OS 27.19**\n\n- **EMAGIAKU OS online**: nella web app EG Remoto, accanto ai tuoi PC, compare \"EMAGIAKU OS online\", il sistema\n  EMAGIAKU che gira su internet (gratis). Lo apri dal telefono anche quando il PC e' spento: desktop, app EG,\n  Firefox, menu EG, tastiera e tocco. Entra solo chi ha un Account EMAGIAKU autorizzato e con l'email confermata.\n  E' piu' lento di un PC vero e i file salvati li' si cancellano quando si riavvia.\n- **EG Remoto con KDE Plasma 6.8**: Arch Linux ha aggiornato KDE alla 6.8, che funziona solo in Wayland.\n  EG Remoto ora funziona anche in Wayland: la prima volta che ti colleghi, sul PC compare la richiesta di KDE\n  \"Condivisione dello schermo e controllo\": premi **Consenti** (poi non la chiede piu').\n- \"Installa i componenti\" in Accesso remoto aggiunge quelli per Wayland (PipeWire e portale KDE).\n- EG Impostazioni > Accesso remoto spiega EMAGIAKU OS online e il permesso di Wayland.\n",
- "file": "emagiaku-glass-os-27.19.tar.gz",
- "sha256": "65ef64f499a6df1cb489830e734d650f1d6447d1df184d46ee67c6ee21b51597",
- "size": 4942623,
+ "version": "27.20",
+ "notes": "EMAGIAKU GLASS OS 27.20: nuovo stile piu' rotondo, chiavi nell'account e sistema pronto per KDE 6.8.\n\n**Novita' di EMAGIAKU GLASS OS 27.20**\n\n- **Nuovo stile, piu' rotondo (tipo macOS)**: tutte le app EG hanno angoli piu' ampi, pulsanti \"a pillola\",\n  barre di scorrimento sottili e arrotondate; le finestre non hanno piu' il bordo e hanno tutti e quattro\n  gli angoli arrotondati.\n- **Chiavi PRO / STUDY collegate all'Account EMAGIAKU**: quando attivi una chiave con l'account collegato,\n  viene salvata nel tuo account (in modo privato). Su un altro PC o dopo una reinstallazione basta entrare con\n  l'Account EMAGIAKU e l'edizione si attiva da sola. \"Disattiva\" la toglie anche dall'account.\n  Se avevi gia' una chiave attiva, con questo aggiornamento viene salvata nell'account al prossimo accesso.\n- **Pronto per KDE Plasma 6.8 (solo Wayland)**: le impostazioni di mouse e touchpad funzionano anche in Wayland.\n- **Nuova ISO 27.20** (per chi installa da zero): contiene gia' tutto questo e i componenti di EG Remoto.\n- **EMAGIAKU OS online / EG GLASS PHONE**: anche il sistema online passa alla 27.20.\n",
+ "file": "emagiaku-glass-os-27.20.tar.gz",
+ "sha256": "62937584632143b5e79e074ef93bfb110fc065f0314e98c6484d7b3b476050e0",
+ "size": 4944155,
  "packages": []
 }

@@ -7,3 +7,5 @@ NoiseStrength=4
 [org.kde.kdecoration2]
 ButtonsOnLeft=XIA
 ButtonsOnRight=
+BorderSize=None
+BorderSizeAuto=false
