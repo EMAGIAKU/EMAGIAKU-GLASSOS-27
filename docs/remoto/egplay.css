@@ -1,0 +1,58 @@
+/* EG Remoto "Gioca" (27.22): schermo di gioco con controller sullo schermo */
+
+/* schermo di gioco */
+.egp { position: fixed; inset: 0; z-index: 100; background: #000; touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden; }
+.egp video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.egp-barra { position: absolute; top: max(6px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); display: flex; gap: 6px; align-items: center; z-index: 3; }
+.egp-barra span, .egp-barra button { font: 600 12px/1 system-ui, sans-serif; color: #fff; background: rgba(0, 0, 0, .5); border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 99px; padding: 7px 11px; width: auto; margin: 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.egp-tempo.poco { color: #facc15; }
+.egp-status { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #fff; background: rgba(20, 14, 34, .85);
+  padding: 14px 20px; border-radius: 18px; max-width: 80vw; text-align: center; z-index: 4; }
+.egp-toast { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); color: #fff; background: rgba(20, 14, 34, .9);
+  padding: 10px 16px; border-radius: 99px; max-width: 86vw; text-align: center; z-index: 4; font-size: 14px; }
+.egp-gira { display: none; position: absolute; inset: 0; z-index: 5; place-items: center; text-align: center; padding: 30px; color: #fff;
+  background: rgba(10, 6, 20, .92); font-size: 18px; }
+@media (orientation: portrait) { .egp-gira { display: grid; } }
+
+.egp-ctrl { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.egp-ctrl > * { pointer-events: auto; }
+.egp-t { position: absolute; width: 52px; height: 52px; margin: 0; padding: 0; border-radius: 50%; color: #fff; font: 800 16px/1 system-ui, sans-serif;
+  background: rgba(255, 255, 255, .14); border: 1.5px solid rgba(255, 255, 255, .35); touch-action: none; }
+.egp-t.on { background: rgba(138, 79, 255, .75); transform: scale(.94); }
+/* tasti a destra */
+.egp-a { right: calc(78px + env(safe-area-inset-right)); bottom: 24px; color: #4ade80; }
+.egp-b { right: calc(22px + env(safe-area-inset-right)); bottom: 80px; color: #f87171; }
+.egp-x { right: calc(134px + env(safe-area-inset-right)); bottom: 80px; color: #60a5fa; }
+.egp-y { right: calc(78px + env(safe-area-inset-right)); bottom: 136px; color: #facc15; }
+/* croce a sinistra (sopra la levetta) */
+.egp-su, .egp-giu, .egp-sx, .egp-dx { width: 44px; height: 44px; border-radius: 12px; font-size: 13px; }
+.egp-su { left: calc(70px + env(safe-area-inset-left)); bottom: 238px; }
+.egp-giu { left: calc(70px + env(safe-area-inset-left)); bottom: 150px; }
+.egp-sx { left: calc(26px + env(safe-area-inset-left)); bottom: 194px; }
+.egp-dx { left: calc(114px + env(safe-area-inset-left)); bottom: 194px; }
+/* dorsali */
+.egp-lb, .egp-lt, .egp-rb, .egp-rt { width: 64px; height: 38px; border-radius: 14px; font-size: 13px; top: max(10px, env(safe-area-inset-top)); }
+.egp-lt { left: calc(16px + env(safe-area-inset-left)); }
+.egp-lb { left: calc(88px + env(safe-area-inset-left)); }
+.egp-rb { right: calc(88px + env(safe-area-inset-right)); }
+.egp-rt { right: calc(16px + env(safe-area-inset-right)); }
+/* centro */
+.egp-back, .egp-start, .egp-guida { width: 42px; height: 42px; bottom: 14px; font-size: 14px; }
+.egp-back { left: calc(50% - 74px); }
+.egp-guida { left: calc(50% - 21px); background: rgba(138, 79, 255, .45); font-size: 12px; }
+.egp-start { left: calc(50% + 32px); }
+/* levette */
+.egp-stick { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: rgba(255, 255, 255, .08);
+  border: 1.5px solid rgba(255, 255, 255, .28); touch-action: none; display: grid; place-items: center; }
+.egp-stick i { width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 255, 255, .35); transition: transform .05s; }
+.egp-stick.sx { left: calc(18px + env(safe-area-inset-left)); bottom: 14px; }
+.egp-stick.dx { right: calc(196px + env(safe-area-inset-right)); bottom: 14px; width: 100px; height: 100px; }
+.egp-stick.dx i { width: 42px; height: 42px; }
+@media (max-height: 380px) {
+  .egp-t { width: 44px; height: 44px; font-size: 14px; }
+  .egp-su { bottom: 196px; } .egp-giu { bottom: 124px; } .egp-sx, .egp-dx { bottom: 160px; }
+  .egp-y { bottom: 118px; } .egp-b, .egp-x { bottom: 70px; } .egp-a { bottom: 22px; }
+  .egp-b { right: calc(22px + env(safe-area-inset-right)); } .egp-x { right: calc(122px + env(safe-area-inset-right)); } .egp-a, .egp-y { right: calc(72px + env(safe-area-inset-right)); }
+  .egp-stick.sx { width: 104px; height: 104px; } .egp-stick.dx { right: calc(176px + env(safe-area-inset-right)); width: 88px; height: 88px; }
+}

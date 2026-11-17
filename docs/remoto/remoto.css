@@ -8,6 +8,7 @@
 .dev .info b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dev .info span { color: var(--muted); font-size: 13px; }
 .dev button { width: auto; margin: 0; padding: 10px 16px; }
+.dev button.gioca { padding: 10px 12px; }
 
 #viewer { position: fixed; inset: 0; background: #000; touch-action: none; user-select: none;
           -webkit-user-select: none; overflow: hidden; }

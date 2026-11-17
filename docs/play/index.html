@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0814">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EG PLAY CLOUD">
+<meta name="description" content="EG PLAY CLOUD: giochi in cloud su telefono, PC, tablet e TV, con l'Account EMAGIAKU.">
+<title>EG PLAY CLOUD</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="../eg.css">
+<link rel="stylesheet" href="play.css">
+</head>
+<body>
+<main id="ui">
+  <div class="brand"><img class="appicon" src="icon-192.png" alt=""><div><b>EG PLAY CLOUD</b><span>Giochi in cloud su telefono, PC, tablet e TV</span></div></div>
+  <div id="msg" class="msg" hidden></div>
+
+  <section id="login" class="card" hidden>
+    <h1>Accedi</h1>
+    <p>Con il tuo Account EMAGIAKU (lo stesso del PC, di EG Remoto e di EG GLASS PHONE).</p>
+    <button id="b_passkey">Accedi con la passkey</button>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" inputmode="email">
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <button id="b_login" class="alt">Accedi con email e password</button>
+    <button id="b_go_signup" class="alt">Non hai un account? Crealo</button>
+  </section>
+
+  <section id="signup" class="card" hidden>
+    <h1>Crea l'Account EMAGIAKU</h1>
+    <label for="s_name">Nome (facoltativo)</label>
+    <input id="s_name" autocomplete="name" maxlength="128">
+    <label for="s_email">Email</label>
+    <input id="s_email" type="email" autocomplete="username" inputmode="email">
+    <label for="s_pw">Password</label>
+    <input id="s_pw" type="password" autocomplete="new-password">
+    <label for="s_pw2">Ripeti la password</label>
+    <input id="s_pw2" type="password" autocomplete="new-password">
+    <p class="small">Almeno 8 caratteri, con lettere e numeri.</p>
+    <button id="b_signup">Crea account</button>
+    <button id="b_go_login" class="alt">Ho gia' un account</button>
+  </section>
+
+  <section id="verify" class="card" hidden>
+    <h1>Conferma la tua email</h1>
+    <p id="v_text">Ti abbiamo mandato un codice di 6 cifre.</p>
+    <input id="v_code" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+    <button id="b_verify">Conferma</button>
+    <button id="b_verify_again" class="alt">Mandami un altro codice</button>
+  </section>
+
+  <section id="mfa" class="card" hidden>
+    <h1>Verifica in due passaggi</h1>
+    <p>Scrivi il codice dell'app di autenticazione (o un codice di recupero).</p>
+    <input id="code" inputmode="numeric" autocomplete="one-time-code">
+    <button id="b_mfa">Conferma</button>
+    <button id="b_mfa_out" class="alt">Annulla</button>
+  </section>
+
+  <section id="home" hidden>
+    <div class="card apertura">
+      <span class="p-stato presto">In arrivo</span>
+      <h1>Servizi in arrivo</h1>
+      <p>Con EG PLAY CLOUD giochi senza scaricare niente, anche senza un PC potente. Nessun piano è ancora attivo:
+        scegli quello che vuoi e mettiti in lista d'attesa. <b>Non paghi niente adesso</b>: ti avvisiamo noi quando apre.</p>
+    </div>
+
+    <div class="card">
+      <h2>I tuoi account di gioco</h2>
+      <p class="small">Col piano FREE (e con tutti gli altri) colleghi i tuoi account e giochi i giochi che hai già, senza scaricarli.</p>
+      <div class="account"><b>Steam</b><button disabled>In arrivo</button></div>
+      <div class="account"><b>Epic Games</b><button disabled>In arrivo</button></div>
+    </div>
+
+    <div id="offerta" class="card offerta" hidden>
+      <h2>Hai EG GLASS OS PRO</h2>
+      <p>Hai <b>2 mesi di EG PLAY CLOUD PRO inclusi</b>. In quei 2 mesi puoi passare a <b>ULTRA a 5 € al mese</b> invece di 19,99 €.
+        Finiti i 2 mesi: ULTRA a 19,99 € al mese, oppure torni a FREE finché non ti abboni a un piano.</p>
+      <p class="small">Partono all'apertura dei server EG PLAY.</p>
+    </div>
+
+    <div id="piani" class="piani"></div>
+    <p class="small nota-catalogo">I titoli dei cataloghi PLUS, PRO e ULTRA saranno annunciati prima dell'apertura.</p>
+
+    <div class="card">
+      <h2>Vuoi giocare già adesso?</h2>
+      <p class="small">Con <b>EG Remoto</b> giochi dal telefono con i giochi del tuo PC EMAGIAKU di casa (pulsante 🎮 Gioca),
+        col controller o con i comandi sullo schermo. È gratis e senza limiti di tempo.</p>
+      <a class="bottone" href="../remoto/">Apri EG Remoto</a>
+    </div>
+
+    <div class="card">
+      <p class="small" id="who"></p>
+      <button id="b_out" class="alt">Esci dall'account</button>
+    </div>
+  </section>
+
+  <section id="install" class="card" hidden>
+    <h2>Installa EG PLAY CLOUD</h2>
+    <p id="install_text" class="small"></p>
+    <button id="b_install" hidden>Installa</button>
+  </section>
+  <footer>EG PLAY CLOUD · EMAGIAKU.TEAM<br>
+    <a href="https://github.com/EMAGIAKU/EMAGIAKU-GLASSOS-27/blob/main/PRIVACY.md">Privacy</a></footer>
+</main>
+<script src="../eg.js"></script>
+<script src="play.js"></script>
+</body>
+</html>

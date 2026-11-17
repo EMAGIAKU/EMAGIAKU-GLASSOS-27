@@ -1,8 +1,12 @@
 {
- "version": "27.21",
- "notes": "EG GLASS PHONE: nel sistema online sei gia' collegato al tuo Account EMAGIAKU.\n\n**Novita' di EMAGIAKU GLASS OS 27.21**\n\n- **Account gia' collegato in EMAGIAKU OS online**: quando entri da EG GLASS PHONE o da EG Remoto, dentro il\n  sistema online le app EG (Impostazioni > Account, chiavi PRO/STUDY, ...) usano gia' il tuo Account EMAGIAKU:\n  niente secondo accesso. Il collegamento si rinnova da solo mentre sei dentro e sparisce quando esci.\n  \"Esci dall'account\" dentro il sistema online non scollega l'app sul telefono.\n- **Accensione piu' semplice**: a ogni riaccensione il sistema online torna raggiungibile da solo\n  (prima bisognava rendere pubblica la porta a mano). Dopo \"Accendi\" premi \"Restart codespace\" su GitHub.\n",
- "file": "emagiaku-glass-os-27.21.tar.gz",
- "sha256": "7f8d338de6543936499d905091cdb4d217238aace56d2dfe885ec6e304085c3f",
- "size": 4944386,
- "packages": []
+ "version": "27.22",
+ "notes": "EG PLAY OS: il tuo PC diventa una console, col controller PlayStation, Xbox o Nintendo.\n\n**Novita' di EMAGIAKU GLASS OS 27.22**\n\n- **EG PLAY** (nel menu, categoria Giochi): i tuoi giochi a tutto schermo, da usare col controller o con le\n  frecce. Trova da solo i giochi Steam, Flatpak e quelli del sistema e li avvia. Incluso in PRO.\n- **EG PLAY OS**: in EG PLAY > Impostazioni premi \"Prepara EG PLAY OS\". Nella schermata di accesso compare la\n  sessione \"EG PLAY\": niente desktop, solo giochi. Puoi anche farla partire da sola all'accensione.\n  Da EG PLAY si torna al desktop, si riavvia o si spegne.\n- **Controller PlayStation, Xbox e Nintendo**: con il cavo funzionano subito; senza fili si associano da\n  EG PLAY > Impostazioni > Cerca controller Bluetooth. I simboli sullo schermo cambiano con il controller\n  (✕ ○ △ per PlayStation; su Nintendo A conferma e B torna indietro, come su Switch).\n- **Gioca da lontano con EG Remoto**: nella web app EG Remoto c'e' il pulsante 🎮 Gioca. Usi i giochi di\n  questo PC dal telefono, con video fluido, audio e controller (quello collegato al telefono o i comandi sullo\n  schermo). Gratis e senza limiti di tempo.\n- **EG PLAY CLOUD** (nuova app per telefono, PC, tablet e TV): piani FREE, PLUS (5,99 €), PRO (11,99 €) e\n  ULTRA (19,99 €) al mese, con i cataloghi di giochi. I server EG PLAY non sono ancora aperti: nell'app ti\n  metti in lista d'attesa, senza pagare. Con EG GLASS OS PRO: 2 mesi di CLOUD PRO, e in quei 2 mesi ULTRA a 5 €.\n- **Prezzi**: PRO ora costa 35 € e include EG PLAY OS e 2 mesi di EG PLAY CLOUD PRO (dall'apertura del\n  servizio). EG PLAY da solo: 15 €.\n- **Hai una console vecchia?** Una volta sola compare l'invito a EG PLAY OS (pagamento con PayPal; con la\n  chiave arriva il link privato della ISO). Con PRO lo trovi in Impostazioni > Edizione.\n\nEG PLAY e' un prototipo: provalo e dicci come va.\n",
+ "file": "emagiaku-glass-os-27.22.tar.gz",
+ "sha256": "da01709518c75a50e0ddbce87c3ea904199da3f63c5b374c66cf19aef090ca9e",
+ "size": 4970769,
+ "packages": [
+  "gamescope",
+  "bluez",
+  "bluez-utils"
+ ]
 }

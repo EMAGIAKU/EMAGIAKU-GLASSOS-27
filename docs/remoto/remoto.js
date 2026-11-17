@@ -155,14 +155,22 @@ async function loadDevices() {
     const online = d.status !== "offline" && now - (d.seen || 0) < 300;
     const div = document.createElement("div");
     div.className = "dev";
-    div.innerHTML = '<div class="dot"></div><div class="info"><b></b><span></span></div><button>Collega</button>';
+    div.innerHTML = '<div class="dot"></div><div class="info"><b></b><span></span></div><button>Collega</button>' +
+      '<button class="alt gioca" title="Gioca con i giochi di questo PC, col controller">🎮 Gioca</button>';
     div.querySelector(".dot").classList.add(online ? (d.status === "busy" ? "busy" : "on") : "off");
     div.querySelector("b").textContent = d.name || "PC";
     div.querySelector("span").textContent = online ? (d.status === "busy" ? "in uso" : "acceso") :
       "spento o non raggiungibile";
-    const b = div.querySelector("button");
+    const [b, g] = div.querySelectorAll("button");
     b.disabled = !online;
     b.onclick = () => connect(d);
+    // 27.22: modalita' gioco (60 fps, audio, controller vero o sullo schermo)
+    g.disabled = !online;
+    g.onclick = () => {
+      EG.msg("");
+      if (!ME.emailVerification) { EG.msg("Prima conferma la tua email: EG Remoto ti manda un codice.", "bad"); return sendVerify(); }
+      EGPlay.gioca(d, ME, { ended: (r) => { if (r) EG.msg(r, "bad"); if (ME) loadDevices(); } });
+    };
     list.appendChild(div);
   });
 }
