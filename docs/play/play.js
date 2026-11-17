@@ -180,10 +180,115 @@ function disegnaPiani() {
   });
 }
 
+// ------------------------------------------------------------- account di gioco (preferenza privata "eg_giochi")
+// Si salva solo QUALE account hai (nome o ID pubblico), mai password o accessi: per giocare si entra una volta nel
+// programma del negozio (Steam, Heroic per Epic/GOG/Amazon, Lutris per Ubisoft/EA/Rockstar/2K...).
+const NEGOZI = [
+  { id: "steam", nome: "Steam", steam: true },
+  { id: "epic", nome: "Epic Games" },
+  { id: "ubisoft", nome: "Ubisoft Connect" },
+  { id: "ea", nome: "EA app" },
+  { id: "rockstar", nome: "Rockstar Games" },
+  { id: "2k", nome: "2K" },
+  { id: "nacon", nome: "Nacon" },
+  { id: "gog", nome: "GOG" },
+  { id: "battlenet", nome: "Battle.net" },
+  { id: "xbox", nome: "Xbox / Microsoft" },
+];
+function giochi() { try { return JSON.parse(PREFS.eg_giochi || "{}") || {}; } catch (e) { return {}; } }
+async function salvaGiochi(g) {
+  const p = (await EG.call("GET", "/account/prefs")) || {};
+  p.eg_giochi = JSON.stringify(g);
+  await EG.call("PATCH", "/account/prefs", { prefs: p });
+  PREFS = p;
+}
+
+function disegnaAccount() {
+  const box = EG.$("account_giochi");
+  const g = giochi();
+  box.textContent = "";
+  NEGOZI.forEach((n) => {
+    const a = g[n.id];
+    const row = document.createElement("div");
+    row.className = "account";
+    row.innerHTML = '<div class="acc-info"><b></b><span></span></div><div class="acc-btn"></div>';
+    row.querySelector("b").textContent = n.nome;
+    row.querySelector("span").textContent = a ? "Collegato" + (a.nome ? ": " + a.nome : "") : "Non collegato";
+    row.querySelector("span").className = a ? "acc-ok" : "";
+    const btns = row.querySelector(".acc-btn");
+    const b = document.createElement("button");
+    if (a) {
+      b.textContent = "Scollega";
+      b.className = "alt";
+      b.onclick = async () => {
+        EG.busy(b, true);
+        const nuovo = giochi(); delete nuovo[n.id];
+        try { await salvaGiochi(nuovo); disegnaAccount(); } catch (e) { EG.busy(b, false); EG.msg(EG.niceError(e), "bad"); }
+      };
+    } else if (n.steam) {
+      b.textContent = "Accedi con Steam";
+      b.onclick = () => steamLogin();
+    } else {
+      b.textContent = "Collega";
+      b.onclick = () => chiediNome(n, row);
+    }
+    btns.appendChild(b);
+    box.appendChild(row);
+  });
+}
+
+// nome account (non la password): serve per ricordarti dove entrare
+function chiediNome(n, row) {
+  const f = document.createElement("div");
+  f.className = "acc-form";
+  f.innerHTML = '<input maxlength="64" autocomplete="off"><button>Salva</button><p class="small"></p>';
+  const inp = f.querySelector("input");
+  inp.placeholder = "Nome account " + n.nome + " (non la password)";
+  f.querySelector("p").textContent = "Scrivi il nome utente o l'email che usi su " + n.nome + ". La password non va mai scritta qui.";
+  row.after(f);
+  inp.focus();
+  f.querySelector("button").onclick = async (e) => {
+    const nome = inp.value.trim().slice(0, 64);
+    if (!nome) { inp.focus(); return; }
+    EG.busy(e.target, true);
+    const g = giochi();
+    g[n.id] = { nome, data: new Date().toISOString().slice(0, 10) };
+    try { await salvaGiochi(g); disegnaAccount(); EG.msg(n.nome + " collegato al tuo Account EMAGIAKU.", "ok"); }
+    catch (x) { EG.busy(e.target, false); EG.msg(EG.niceError(x), "bad"); }
+  };
+}
+
+// Steam: accesso ufficiale "Sign in through Steam" (OpenID). Torna qui con il tuo SteamID pubblico.
+function steamLogin() {
+  const back = location.origin + location.pathname;
+  const q = new URLSearchParams({
+    "openid.ns": "http://specs.openid.net/auth/2.0",
+    "openid.mode": "checkid_setup",
+    "openid.return_to": back + "?steam=1",
+    "openid.realm": location.origin,
+    "openid.identity": "http://specs.openid.net/auth/2.0/identifier_select",
+    "openid.claimed_id": "http://specs.openid.net/auth/2.0/identifier_select",
+  });
+  location.href = "https://steamcommunity.com/openid/login?" + q.toString();
+}
+async function steamRitorno() {
+  const u = new URLSearchParams(location.search);
+  if (!u.get("steam")) return;
+  history.replaceState(null, "", location.pathname);       // tolgo i parametri dall'indirizzo
+  const m = /^https:\/\/steamcommunity\.com\/openid\/id\/(\d{17})$/.exec(u.get("openid.claimed_id") || "");
+  if (u.get("openid.mode") !== "id_res" || !m) { EG.msg("Accesso a Steam annullato.", "bad"); return; }
+  const g = giochi();
+  g.steam = { id: m[1], nome: "SteamID " + m[1], data: new Date().toISOString().slice(0, 10) };
+  try { await salvaGiochi(g); EG.msg("Steam collegato al tuo Account EMAGIAKU.", "ok"); }
+  catch (e) { EG.msg(EG.niceError(e), "bad"); }
+}
+
 async function home() {
   view("home");
   EG.$("who").textContent = "Account: " + ME.email;
   try { PREFS = (await EG.call("GET", "/account/prefs")) || {}; } catch (e) { PREFS = {}; }
+  await steamRitorno();
+  disegnaAccount();
   disegnaPiani();
   EG.show("offerta", await hasGlassPro(PREFS).catch(() => false));
 }

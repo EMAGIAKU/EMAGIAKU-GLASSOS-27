@@ -6,6 +6,13 @@ body { background: radial-gradient(900px 500px at 80% -10%, #3b1d6e, transparent
 .apertura h1 { margin: 10px 0 6px; font-size: 22px; }
 .account { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, .08); }
 .account button { width: auto; margin: 0; padding: 8px 14px; }
+.acc-info { min-width: 0; }
+.acc-info b { display: block; }
+.acc-info span { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.acc-info span.acc-ok { color: #4ade80; }
+.acc-form { padding: 4px 0 12px; }
+.acc-form input { margin: 0 0 6px; }
+.acc-form button { width: auto; margin: 0; padding: 8px 16px; }
 .offerta { background: linear-gradient(140deg, rgba(250, 204, 21, .16), rgba(138, 79, 255, .28)); }
 .offerta[hidden] { display: none; }
 .bottone { display: block; text-align: center; padding: 12px; border-radius: 14px; background: var(--accent, #8a4fff); color: #fff;

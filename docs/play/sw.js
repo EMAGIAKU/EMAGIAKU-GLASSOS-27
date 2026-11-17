@@ -1,6 +1,6 @@
 // EG PLAY CLOUD - service worker: rende l'app installabile. Prima la rete (aggiornamenti subito), poi la copia salvata.
 // Non conserva mai i dati dell'account (Appwrite passa sempre dalla rete).
-const CACHE = "eg-play-v1";
+const CACHE = "eg-play-v2";
 const FILES = ["./", "index.html", "play.js", "play.css", "manifest.webmanifest", "icon-192.png", "icon-512.png",
                "apple-touch-icon.png", "../eg.js", "../eg.css"];
 self.addEventListener("install", (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())));
