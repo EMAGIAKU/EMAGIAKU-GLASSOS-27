@@ -1,12 +1,13 @@
 {
- "version": "27.23",
- "notes": "Account di gioco: Steam, Epic, Ubisoft, EA, Rockstar e gli altri restano nel tuo Account EMAGIAKU.\n\n**Novita' di EMAGIAKU GLASS OS 27.23**\n\n- **Account di gioco collegati una volta sola**: nell'app EG PLAY CLOUD colleghi Steam (con l'accesso ufficiale\n  di Steam), Epic Games, Ubisoft Connect, EA app, Rockstar Games, 2K, Nacon, GOG, Battle.net e Xbox. Restano nel\n  tuo Account EMAGIAKU: su EG PLAY OS e su ogni PC dove entri con l'account li ritrovi gia'.\n- **Impostazioni > Account di gioco** (EG GLASS OS 27) e **EG PLAY > Impostazioni > Account di gioco** (EG PLAY OS): per ogni account c'e' il programma giusto da aprire (Steam, Heroic\n  per Epic e GOG, Lutris per Ubisoft, EA, Rockstar e Battle.net). Se manca si installa da solo. Si entra una volta\n  sola nel programma del negozio, poi i giochi installati compaiono nella Libreria.\n- EMAGIAKU non vede e non salva le password dei negozi: nell'account resta solo il nome o l'ID pubblico.\n",
- "file": "emagiaku-glass-os-27.23.tar.gz",
- "sha256": "9dcfb5db9443a89eff7cf2dced49f458c83b121c7f598fc002f01b23c5254e12",
- "size": 4974471,
+ "version": "27.26",
+ "notes": "EG PLAY diventa una vera console: Steam nascosto, tutti i negozi in Libreria, EG Hub ed EG PLUS.\n\n**Novita' di EMAGIAKU GLASS OS 27.26 / EG PLAY OS Beta**\n\n- **Nuova animazione di avvio**: un controller che si ingrandisce, poi EMAGIAKU - PLAY OS 27 (un tasto la salta).\n- **Home solo con i tuoi giochi**: ci sono solo i giochi installati e quelli che si stanno scaricando (con la\n  percentuale, si aggiorna da sola).\n- **Steam non si apre piu' davanti**: i giochi Steam partono e si scaricano con Steam nascosto. Il tasto\n  EG / PS / Xbox / Home del controller ti riporta sempre a EG PLAY.\n- **Libreria con tutti i negozi**: oltre a Steam, Epic Games e GOG ci sono Ubisoft, EA, Battle.net, Amazon e il\n  filtro Rockstar (GTA, Red Dead...).\n- **Account collegati da Impostazioni**: EG PLAY > Impostazioni > Account di gioco > premi il negozio. Si apre solo\n  la sua pagina di accesso ufficiale con una tastiera a schermo per il controller. Niente app da installare a mano.\n- **EG HUB** (prima tessera in Home): batteria dei controller, amici online, download e aggiornamenti dei giochi,\n  spazio e stato della console.\n- **EG PLUS** (accanto a EG Store): gli abbonamenti Essential, Mega e Max. I giochi inclusi arrivano presto; chi ha\n  una chiave EG PLUS la attiva da li'.\n- Lo store apre le pagine di Steam ed Epic a tutto schermo, da usare col controller.\n- EG PLAY OS (beta): ricerca in tutti i negozi, tasto SINCRONIZZA, controller come mouse nelle app Media e\n  installazione sul disco accanto a EMAGIAKU GLASS OS 27.\n",
+ "file": "emagiaku-glass-os-27.26.tar.gz",
+ "sha256": "2154ef3da475a55bea2a7bc836b5f7b944f86336efee36e01dd0005d74f6414f",
+ "size": 5029312,
  "packages": [
-  "gamescope",
-  "bluez",
-  "bluez-utils"
+  "lutris",
+  "webkit2gtk-4.1",
+  "python-gobject",
+  "python-xlib"
  ]
 }
