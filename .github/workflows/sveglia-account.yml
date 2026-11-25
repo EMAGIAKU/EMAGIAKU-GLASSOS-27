@@ -1,0 +1,31 @@
+# EMAGIAKU - tiene sveglio il server dell'Account EMAGIAKU (progetto Appwrite "EMAGIAKU GLASS OS").
+# Il piano gratuito di Appwrite mette in pausa i progetti che restano senza richieste: ogni 2 giorni qui si fanno
+# due richieste pubbliche (nessuna chiave, nessun dato degli utenti). Si puo' lanciare anche a mano da "Actions".
+name: Sveglia Account EMAGIAKU
+
+on:
+  schedule:
+    - cron: "17 6 */2 * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  sveglia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Richieste al server dell'Account EMAGIAKU
+        run: |
+          set -u
+          E=https://fra.cloud.appwrite.io/v1
+          H="X-Appwrite-Project: 6af5ebe90008bba8da64"
+          L=$(curl -s -o /tmp/l.json -w '%{http_code}' -H "$H" "$E/locale")
+          A=$(curl -s -o /tmp/a.json -w '%{http_code}' -H "$H" "$E/account")
+          echo "locale: $L  account (senza accesso): $A"
+          if grep -qi "paused" /tmp/l.json /tmp/a.json; then
+            echo "::error::Il progetto Appwrite e' IN PAUSA: apri la console di Appwrite e premi Ripristina progetto"
+            exit 1
+          fi
+          [ "$L" = "200" ] || { echo "::error::Il server dell'Account EMAGIAKU non risponde come previsto ($L)"; exit 1; }
+          echo "Account EMAGIAKU sveglio."
