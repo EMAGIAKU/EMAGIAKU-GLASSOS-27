@@ -151,3 +151,28 @@ EG.niceError = (e) => {
   if (e && e.name === "InvalidStateError") return "Su questo telefono c'e' gia' una passkey per questo account.";
   return (e && e.message) || "Qualcosa non e' andato.";
 };
+// 27.28: occhio per vedere la password mentre la scrivi (in tutte le pagine e app EMAGIAKU)
+EG.pwToggles = () => {
+  document.querySelectorAll('input[type="password"]:not([data-eg-occhio])').forEach((inp) => {
+    inp.dataset.egOcchio = "1";
+    const wrap = document.createElement("span");
+    wrap.className = "pw-wrap";
+    inp.parentNode.insertBefore(wrap, inp);
+    wrap.appendChild(inp);
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "pw-occhio";
+    b.textContent = "👁";
+    b.setAttribute("aria-label", "Mostra la password");
+    b.addEventListener("click", () => {
+      const mostra = inp.type === "password";
+      inp.type = mostra ? "text" : "password";
+      b.textContent = mostra ? "🙈" : "👁";
+      b.setAttribute("aria-label", mostra ? "Nascondi la password" : "Mostra la password");
+      inp.focus();
+    });
+    wrap.appendChild(b);
+  });
+};
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", EG.pwToggles);
+else EG.pwToggles();

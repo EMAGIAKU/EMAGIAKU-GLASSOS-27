@@ -1,9 +1,9 @@
 {
- "version": "27.27",
- "notes": "EG CLOUD al posto degli abbonamenti EG PLUS, ed EG PLAY OS anche sul telefono.\n\n**Novita' di EMAGIAKU GLASS OS 27.27 / EG PLAY OS Beta**\n\n- **EG CLOUD** (accanto a EG Store, al posto di EG PLUS): i piani di EG PLAY CLOUD - FREE, PLUS 5,99, PRO 11,99,\n  ULTRA 19,99 al mese. Ogni piano include ore di un PC da gioco nel cloud dove entri con i tuoi account (Steam, EA,\n  Ubisoft, Epic...) e giochi i tuoi giochi o il tuo abbonamento, senza scaricarli. I server sono in arrivo: mettiti\n  in lista d'attesa dalla console, non paghi niente adesso.\n- **EG HUB** mostra il piano EG CLOUD per cui sei in lista d'attesa.\n- **App EG PLAY CLOUD**: nuova scheda \"EG PLAY OS online\" per usare l'interfaccia di EG PLAY OS dal telefono,\n  con il sistema online EMAGIAKU.\n- Le chiavi EG PLUS gia' date continuano a sbloccare EG PLAY.\n",
- "file": "emagiaku-glass-os-27.27.tar.gz",
- "sha256": "d11ca976b48da1b7f9329385a53a0e8ed1e2018133978d0c2b0927832c1079a8",
- "size": 5029872,
+ "version": "27.28",
+ "notes": "Ora puoi vedere la password mentre la scrivi, in tutto il sistema e in tutte le app EG.\n\n**Novita' di EMAGIAKU GLASS OS 27.28 / EG PLAY OS Beta**\n\n- **Occhio nei campi password**: tocca l'occhio a destra del campo per vedere quello che scrivi, toccalo di nuovo\n  per nasconderlo. C'e' nell'Account EMAGIAKU, nelle Impostazioni (Wi-Fi, rete nascosta, hotspot, password del PC,\n  accesso all'account), nell'installazione e in EGPT.\n- **EG PLAY**: nella tastiera a schermo, quando scrivi una password, c'e' il tasto \"Mostra / Nascondi\".\n- **App EG** (EG Remoto, EG GLASS PHONE, EG PLAY CLOUD e le pagine dell'Account): l'occhio c'e' anche li'.\n",
+ "file": "emagiaku-glass-os-27.28.tar.gz",
+ "sha256": "840102c77b869d2db5c13afdec83f61f5266729d96f65937020136898f726022",
+ "size": 5030750,
  "packages": [
   "lutris",
   "webkit2gtk-4.1",

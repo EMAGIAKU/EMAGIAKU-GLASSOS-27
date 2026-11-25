@@ -35,3 +35,10 @@ button:disabled { opacity: .6; }
 .small { font-size: 13px; color: var(--muted); }
 footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 18px; }
 a { color: var(--accent2); }
+/* 27.28: occhio per vedere la password */
+.pw-wrap { position: relative; display: block; }
+.pw-wrap input { padding-right: 52px; }
+button.pw-occhio { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 42px; height: 36px;
+  margin: 0; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--text); font-size: 19px;
+  font-weight: 400; line-height: 36px; box-shadow: none; cursor: pointer; }
+button.pw-occhio:focus-visible { outline: 2px solid var(--accent); }
