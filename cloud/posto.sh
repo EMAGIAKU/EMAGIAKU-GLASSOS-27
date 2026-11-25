@@ -7,6 +7,7 @@
 #   account N          scrive l'account (JSON da stdin) nella postazione N
 #   dimentica N UID    toglie l'account della postazione N se e' ancora quello di UID
 #   menu N             apre il menu EG nella postazione N
+#   play N             apre EG PLAY a tutto schermo nella postazione N (EG PLAY OS online, 27.27)
 #   ripulisci N        chiude la sessione e riporta la postazione N come nuova
 set -u
 ACT="${1:-}"; N="${2:-}"
@@ -54,6 +55,14 @@ case "$ACT" in
     runuser -u "$U" -- env DBUS_SESSION_BUS_ADDRESS="$BUS" DISPLAY=":$N" timeout 5 gdbus call --session \
         --dest org.kde.plasmashell --object-path /PlasmaShell --method org.kde.PlasmaShell.activateLauncherMenu \
         >/dev/null 2>&1 ;;
+  play)
+    # 27.27: EG PLAY OS online - apre EG PLAY a tutto schermo nella postazione N (una volta sola)
+    pgrep -u "$U" -f "/usr/bin/emagiaku-play" >/dev/null && exit 0
+    P=$(pgrep -u "$U" -x plasmashell | head -n 1)
+    [ -n "$P" ] || exit 0
+    BUS=$(tr '\0' '\n' < "/proc/$P/environ" | grep '^DBUS_SESSION_BUS_ADDRESS=' | cut -d= -f2-)
+    runuser -u "$U" -- env HOME="$H" USER="$U" LANG=it_IT.UTF-8 DISPLAY=":$N" XDG_RUNTIME_DIR="$RT" EG_CLOUD=1 \
+        DBUS_SESSION_BUS_ADDRESS="$BUS" setsid /usr/bin/emagiaku-play >"/tmp/play-$N.log" 2>&1 < /dev/null & ;;
   ripulisci)
     touch "$LOCK"
     # chiudo tutto quello della postazione tranne lo schermo virtuale (Xvnc resta acceso)

@@ -1,9 +1,9 @@
 {
- "version": "27.26",
- "notes": "EG PLAY diventa una vera console: Steam nascosto, tutti i negozi in Libreria, EG Hub ed EG PLUS.\n\n**Novita' di EMAGIAKU GLASS OS 27.26 / EG PLAY OS Beta**\n\n- **Nuova animazione di avvio**: un controller che si ingrandisce, poi EMAGIAKU - PLAY OS 27 (un tasto la salta).\n- **Home solo con i tuoi giochi**: ci sono solo i giochi installati e quelli che si stanno scaricando (con la\n  percentuale, si aggiorna da sola).\n- **Steam non si apre piu' davanti**: i giochi Steam partono e si scaricano con Steam nascosto. Il tasto\n  EG / PS / Xbox / Home del controller ti riporta sempre a EG PLAY.\n- **Libreria con tutti i negozi**: oltre a Steam, Epic Games e GOG ci sono Ubisoft, EA, Battle.net, Amazon e il\n  filtro Rockstar (GTA, Red Dead...).\n- **Account collegati da Impostazioni**: EG PLAY > Impostazioni > Account di gioco > premi il negozio. Si apre solo\n  la sua pagina di accesso ufficiale con una tastiera a schermo per il controller. Niente app da installare a mano.\n- **EG HUB** (prima tessera in Home): batteria dei controller, amici online, download e aggiornamenti dei giochi,\n  spazio e stato della console.\n- **EG PLUS** (accanto a EG Store): gli abbonamenti Essential, Mega e Max. I giochi inclusi arrivano presto; chi ha\n  una chiave EG PLUS la attiva da li'.\n- Lo store apre le pagine di Steam ed Epic a tutto schermo, da usare col controller.\n- EG PLAY OS (beta): ricerca in tutti i negozi, tasto SINCRONIZZA, controller come mouse nelle app Media e\n  installazione sul disco accanto a EMAGIAKU GLASS OS 27.\n",
- "file": "emagiaku-glass-os-27.26.tar.gz",
- "sha256": "2154ef3da475a55bea2a7bc836b5f7b944f86336efee36e01dd0005d74f6414f",
- "size": 5029312,
+ "version": "27.27",
+ "notes": "EG CLOUD al posto degli abbonamenti EG PLUS, ed EG PLAY OS anche sul telefono.\n\n**Novita' di EMAGIAKU GLASS OS 27.27 / EG PLAY OS Beta**\n\n- **EG CLOUD** (accanto a EG Store, al posto di EG PLUS): i piani di EG PLAY CLOUD - FREE, PLUS 5,99, PRO 11,99,\n  ULTRA 19,99 al mese. Ogni piano include ore di un PC da gioco nel cloud dove entri con i tuoi account (Steam, EA,\n  Ubisoft, Epic...) e giochi i tuoi giochi o il tuo abbonamento, senza scaricarli. I server sono in arrivo: mettiti\n  in lista d'attesa dalla console, non paghi niente adesso.\n- **EG HUB** mostra il piano EG CLOUD per cui sei in lista d'attesa.\n- **App EG PLAY CLOUD**: nuova scheda \"EG PLAY OS online\" per usare l'interfaccia di EG PLAY OS dal telefono,\n  con il sistema online EMAGIAKU.\n- Le chiavi EG PLUS gia' date continuano a sbloccare EG PLAY.\n",
+ "file": "emagiaku-glass-os-27.27.tar.gz",
+ "sha256": "d11ca976b48da1b7f9329385a53a0e8ed1e2018133978d0c2b0927832c1079a8",
+ "size": 5029872,
  "packages": [
   "lutris",
   "webkit2gtk-4.1",

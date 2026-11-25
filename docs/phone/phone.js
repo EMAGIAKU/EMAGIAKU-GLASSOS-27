@@ -2,6 +2,17 @@
 // Usa lo stesso sistema online di EG Remoto (../remoto/cloud.json + cloud.js con noVNC) e lo stesso Account EMAGIAKU.
 "use strict";
 let ME = null, SYS = null, OPEN = false;
+// 27.27: con ?os=play e' "EG PLAY OS online" (app EG PLAY CLOUD): stesso sistema online, si apre EG PLAY a tutto schermo
+const PLAY = new URLSearchParams(location.search).get("os") === "play";
+const NOME = PLAY ? "EG PLAY OS" : "EMAGIAKU GLASS OS";
+if (PLAY) {        // testi della pagina per EG PLAY OS online
+  document.title = "EG PLAY OS online";
+  const b = document.querySelector(".brand b"), s = document.querySelector(".brand span");
+  if (b) b.textContent = "EG PLAY OS online";
+  if (s) s.textContent = "EG PLAY OS sul telefono, senza console: dall'app EG PLAY CLOUD";
+  document.getElementById("b_open").textContent = "Apri EG PLAY OS";
+  document.getElementById("m_play").hidden = false;
+}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function view(which) {
@@ -141,7 +152,7 @@ async function home(autoOpen = true) {
   EG.$("who").textContent = "Account: " + ME.email;
   const dot = EG.$("dot");
   dot.className = "dot";
-  EG.$("st_title").textContent = "Controllo EMAGIAKU GLASS OS...";
+  EG.$("st_title").textContent = "Controllo " + NOME + "...";
   EG.$("st_text").textContent = "";
   EG.show("b_on", false);
   const c = await system().catch(() => null);
@@ -157,18 +168,18 @@ async function home(autoOpen = true) {
   if (on) {
     dot.classList.add("on");
     if (LAST && LAST.in_uso) {
-      EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' pieno";
+      EG.$("st_title").textContent = "" + NOME + " e' pieno";
       EG.$("st_text").textContent = "Tutte le " + (LAST.postazioni || 3) + " postazioni sono occupate. Riprova tra qualche minuto.";
       return;
     }
-    EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' acceso";
+    EG.$("st_title").textContent = "" + NOME + " e' acceso";
     EG.$("st_text").textContent = (LAST && LAST.postazioni ? "Postazioni libere: " + LAST.libere + " di " +
       LAST.postazioni + ". " : "") + "Si apre a tutto schermo; tocca il pallino EG per tastiera e menu. Quando esci, " +
       "dopo un minuto e mezzo la tua postazione viene ripulita (file e account cancellati).";
     if (autoOpen && !sessionStorage.getItem("eg_phone_closed")) openOS();
   } else {
     dot.classList.add("off");
-    EG.$("st_title").textContent = "EMAGIAKU GLASS OS e' spento";
+    EG.$("st_title").textContent = "" + NOME + " e' spento";
     EG.$("st_text").textContent = c.funzione ?
       "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: si apre da solo appena e' pronto (1-2 minuti)." :
       "Si spegne da solo dopo 30 minuti che non lo usi. Premi Accendi: su GitHub premi \"Restart codespace\", " +
@@ -191,20 +202,21 @@ async function openOS() {
   EG.show("menu", false);
   goFullscreen();
   checkTurn();
-  setStatus("Apro EMAGIAKU GLASS OS...");
+  setStatus("Apro " + NOME + "...");
   try {
     if (!window.EGCloud) await new Promise((ok) => window.addEventListener("egcloud-ready", ok, { once: true }));
     let on = false;
     for (let i = 0; i < 60 && OPEN; i++) {            // fino a 4 minuti (accensione del Codespace + desktop)
       if (await isOn(c)) { on = true; break; }
-      setStatus("Aspetto che EMAGIAKU GLASS OS si accenda... (" + (i * 4) + " s)");
+      setStatus("Aspetto che " + NOME + " si accenda... (" + (i * 4) + " s)");
       await sleep(4000);
     }
     if (!OPEN) return;
-    if (!on) throw new Error("EMAGIAKU GLASS OS e' spento: premi Accendi e riprova.");
+    if (!on) throw new Error("" + NOME + " e' spento: premi Accendi e riprova.");
     const jwt = (await EG.call("POST", "/account/jwts", {})).jwt;
     setStatus("Entro con il tuo Account EMAGIAKU...");
-    EGCloud.connect(c, jwt, { screen: EG.$("screen"), status: setStatus, ended: (r) => { if (OPEN) closeOS(r); } });
+    EGCloud.connect(c, jwt, { screen: EG.$("screen"), status: setStatus, ended: (r) => { if (OPEN) closeOS(r); },
+      connected: () => { if (PLAY) setTimeout(() => EGCloud.play(), 1500); } });
   } catch (e) {
     closeOS(EG.niceError(e));
   }
@@ -275,6 +287,7 @@ EG.$("menu").addEventListener("click", (e) => {
   EG.show("menu", false);
   if (a === "kbd") kbd.focus();
   else if (a === "start") { if (window.EGCloud) EGCloud.menu(); }
+  else if (a === "play") { if (window.EGCloud) EGCloud.play(); }
   else if (a === "esc") key("Escape");
   else if (a === "enter") key("Enter");
   else if (a === "full") goFullscreen();

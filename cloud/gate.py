@@ -177,7 +177,7 @@ async def write_account(user, jwt, n):
 
 
 async def command(text, user, n):
-    """Comandi dell'app (solo questi): rinnovo dell'account e menu EG della propria postazione."""
+    """Comandi dell'app (solo questi): rinnovo dell'account, menu EG ed EG PLAY della propria postazione."""
     try:
         msg = json.loads(text)
         name = msg.get("cmd")
@@ -191,6 +191,9 @@ async def command(text, user, n):
     elif name == "menu":
         # il tasto Super da solo non arriva a KWin dallo schermo virtuale: lo chiedo a Plasma
         await posto("menu", n)
+    elif name == "play":
+        # 27.27: EG PLAY OS online (app EG PLAY CLOUD): EG PLAY a tutto schermo nella propria postazione
+        await posto("play", n)
 
 
 async def index(_req):

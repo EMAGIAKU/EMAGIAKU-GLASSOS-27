@@ -1,24 +1,24 @@
-// EG PLAY CLOUD (27.22) - app per telefono, PC, tablet e TV: giochi in cloud con l'Account EMAGIAKU.
+// EG PLAY CLOUD (27.27) - app per telefono, PC, tablet e TV: giochi in cloud con l'Account EMAGIAKU.
 // I server EG PLAY (con scheda video) non sono ancora pronti: per ora piani + lista d'attesa (gratis, senza pagare).
 // La lista d'attesa e' la preferenza privata "eg_cloud_attesa" = "piano|data" dell'account.
 "use strict";
 let ME = null;
 
+// 27.27: niente "giochi inclusi" (servirebbero accordi con chi li crea): ogni piano include ORE di un PC cloud con
+// scheda video, dove entri con i TUOI account (Steam, EA, Ubisoft, Epic...) e giochi i tuoi giochi o il tuo abbonamento.
 const PIANI = [
-  { id: "free", nome: "FREE", prezzo: "Gratis", per: "Collega i tuoi account e gioca i giochi che hai già, senza scaricare nulla.",
-    cose: ["I tuoi giochi di Steam ed Epic Games", "Niente da scaricare", "Telefono, PC, tablet e TV"] },
+  { id: "free", nome: "FREE", prezzo: "Gratis", per: "Per provare: gioca i giochi dei tuoi account senza scaricarli.",
+    cose: ["5 ore di cloud al mese", "I giochi dei tuoi account (Steam, Epic, EA, Ubisoft...)", "Fino a 1080p, coda standard",
+      "Telefono, PC, tablet e TV"] },
   { id: "plus", nome: "PLUS", prezzo: "5,99 € / mese", per: "Per chi vuole giocare in cloud senza avere un PC potente.",
-    cose: ["Tutto quello di FREE", "30 giochi inclusi: 15 indie, 10 arcade, 5 multiplayer", "Accesso al catalogo PLUS",
-      "Streaming fino a 1080p", "Qualità grafica standard", "Accesso ai server EG PLAY", "Sessioni fino a 2 ore", "Coda standard"] },
+    cose: ["20 ore di cloud al mese", "Tutto quello di FREE", "Fino a 1080p 60 FPS", "Sessioni fino a 2 ore"] },
   { id: "pro", nome: "PRO", prezzo: "11,99 € / mese", per: "Per chi vuole un'esperienza gaming più fluida.",
-    cose: ["70 giochi inclusi: tutti i 30 di PLUS", "+ 20 d'azione e avventura, 10 di corse, 10 sportivi e simulatori",
-      "Streaming fino a 1440p", "Hardware cloud più potente", "FPS più elevati nei giochi supportati", "Sessioni fino a 4 ore",
-      "Priorità nelle code", "Salvataggi cloud", "Un dispositivo alla volta: PC, smartphone, tablet e TV compatibili"],
+    cose: ["50 ore di cloud al mese", "Fino a 1440p", "PC cloud più potente, FPS più alti", "Sessioni fino a 4 ore",
+      "Priorità nelle code", "Salvataggi cloud"],
     nota: "2 mesi inclusi con EG GLASS OS PRO" },
   { id: "ultra", nome: "ULTRA", prezzo: "19,99 € / mese", per: "Per chi vuole il massimo delle prestazioni.",
-    cose: ["120 giochi inclusi: tutti i 70 di PRO", "+ 20 AAA, 10 di corse premium, 10 simulatori, 10 giochi aggiuntivi",
-      "Streaming fino a 4K", "Hardware cloud di fascia alta", "FPS fino a 120, dove supportati", "Sessioni fino a 10 ore",
-      "Accesso prioritario ai server", "Salvataggi cloud sincronizzati", "Impostazioni grafiche avanzate", "Supporto multi-dispositivo"],
+    cose: ["100 ore di cloud al mese", "Fino a 4K e 120 FPS, dove supportati", "PC cloud di fascia alta",
+      "Sessioni fino a 10 ore", "Accesso prioritario ai server", "Impostazioni grafiche avanzate"],
     nota: "Con EG GLASS OS PRO: 5 € al mese durante i 2 mesi inclusi" },
 ];
 

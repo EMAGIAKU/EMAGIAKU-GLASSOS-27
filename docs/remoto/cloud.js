@@ -46,7 +46,7 @@ const EGCloud = {
       rfb.scaleViewport = true;
       rfb.resizeSession = false;
       rfb.focusOnClick = false;
-      rfb.addEventListener("connect", () => ui.status(""));
+      rfb.addEventListener("connect", () => { ui.status(""); if (ui.connected) ui.connected(); });
       // l'account resta collegato anche dentro il sistema: il pass (JWT, 15 minuti) si rinnova ogni 10
       clearInterval(renew);
       renew = setInterval(async () => {
@@ -81,6 +81,8 @@ const EGCloud = {
   },
   // comandi al cancello (testo): per ora solo il menu EG
   menu() { if (rfb && sock && sock.readyState === 1) sock.send(JSON.stringify({ cmd: "menu" })); },
+  // 27.27: EG PLAY OS online - apre EG PLAY a tutto schermo nella propria postazione
+  play() { if (rfb && sock && sock.readyState === 1) sock.send(JSON.stringify({ cmd: "play" })); },
   text(s) { if (!rfb) return; for (const ch of s) { if (ch === "\n") tap(K.Enter); else tap(keysymOf(ch)); } },
   key(k, mods) {
     if (!rfb) return;
