@@ -1,9 +1,9 @@
 {
- "version": "27.28",
- "notes": "Ora puoi vedere la password mentre la scrivi, in tutto il sistema e in tutte le app EG.\n\n**Novita' di EMAGIAKU GLASS OS 27.28 / EG PLAY OS Beta**\n\n- **Occhio nei campi password**: tocca l'occhio a destra del campo per vedere quello che scrivi, toccalo di nuovo\n  per nasconderlo. C'e' nell'Account EMAGIAKU, nelle Impostazioni (Wi-Fi, rete nascosta, hotspot, password del PC,\n  accesso all'account), nell'installazione e in EGPT.\n- **EG PLAY**: nella tastiera a schermo, quando scrivi una password, c'e' il tasto \"Mostra / Nascondi\".\n- **App EG** (EG Remoto, EG GLASS PHONE, EG PLAY CLOUD e le pagine dell'Account): l'occhio c'e' anche li'.\n",
- "file": "emagiaku-glass-os-27.28.tar.gz",
- "sha256": "840102c77b869d2db5c13afdec83f61f5266729d96f65937020136898f726022",
- "size": 5030750,
+ "version": "27.29",
+ "notes": "Piu' chiavi insieme: PRO e STUDY (e EG PLAY) sullo stesso PC e nello stesso Account EMAGIAKU.\n\n**Novita' di EMAGIAKU GLASS OS 27.29 / EG PLAY OS Beta**\n\n- **Chiavi multiple**: se hai una chiave PRO e una STUDY le tieni tutte e due (edizione \"PRO + STUDY\").\n  Una nuova chiave non toglie piu' quella che avevi gia' (es. EG PLAY accanto a PRO).\n- Le chiavi restano nel tuo Account EMAGIAKU: su un PC nuovo o dopo una reinstallazione arrivano tutte da sole.\n- Disattiva toglie tutte le chiavi da questo PC e dall'account.\n",
+ "file": "emagiaku-glass-os-27.29.tar.gz",
+ "sha256": "c24f0395175398b65a703b5ffd72e86d10e694d420fdb9dd28b2a4f2832ad88b",
+ "size": 5031818,
  "packages": [
   "lutris",
   "webkit2gtk-4.1",

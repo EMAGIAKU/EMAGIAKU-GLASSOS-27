@@ -132,11 +132,16 @@ const PRO_HASHES = new Set([
   "e8061e0e4139d047c05c1b899f972f34f6a2445b141415021b5cce1eede7813d",
 ]);
 async function hasGlassPro(prefs) {
-  const key = String(prefs.eg_licenza || "").trim().toUpperCase();
-  if (!key || !crypto.subtle) return false;
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(KEY_SALT + key));
-  const hex = Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
-  return PRO_HASHES.has(hex);
+  // 27.29: le chiavi possono essere piu' d'una (eg_licenza + eg_licenze, separate da virgola)
+  const keys = [prefs.eg_licenza].concat(String(prefs.eg_licenze || "").split(/[\s,;]+/))
+    .map((k) => String(k || "").trim().toUpperCase()).filter(Boolean);
+  if (!keys.length || !crypto.subtle) return false;
+  for (const key of keys) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(KEY_SALT + key));
+    const hex = Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
+    if (PRO_HASHES.has(hex)) return true;
+  }
+  return false;
 }
 
 // ------------------------------------------------------------- piani e lista d'attesa
