@@ -13,6 +13,7 @@ Permessi della chiave dinamica (Impostazioni > Scopes): users.read
 """
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 
@@ -31,9 +32,19 @@ def _http(method, url, headers, body=None, timeout=20):
             return e.code, json.loads(e.read() or b"{}")
         except ValueError:
             return e.code, {}
+    except (urllib.error.URLError, OSError) as e:   # rete lenta o irraggiungibile
+        return 0, {"message": type(e).__name__}
 
 
 def main(context):
+    try:
+        return _main(context)
+    except Exception as e:   # mai una risposta vuota: dico il TIPO di errore (niente segreti)
+        context.error("errore: %s" % type(e).__name__)
+        return context.res.json({"ok": False, "errore": "Accensione non riuscita (%s)." % type(e).__name__}, 500)
+
+
+def _main(context):
     res = context.res
     hdr = {k.lower(): v for k, v in (context.req.headers or {}).items()}
     uid = hdr.get("x-appwrite-user-id", "")
@@ -57,10 +68,17 @@ def main(context):
                                                "chiedi a EMAGIAKU.TEAM."}, 403)
 
     # accendo il Codespace
-    token = os.environ.get("GH_TOKEN", "")
-    name = os.environ.get("EG_CODESPACE", "")
+    # un token GitHub ha solo lettere, cifre e "_": via spazi, a capo e caratteri invisibili incollati per sbaglio
+    token = re.sub(r"[^A-Za-z0-9_]", "", os.environ.get("GH_TOKEN", ""))
+    name = os.environ.get("EG_CODESPACE", "").strip()
+    if token and not token.startswith(("github_pat_", "ghp_")):
+        context.error("GH_TOKEN con formato strano (lunghezza %d)" % len(token))   # mai il valore
+        return res.json({"ok": False, "errore": "Il GH_TOKEN salvato non sembra un token GitHub: "
+                                               "va reincollato in Appwrite."}, 503)
     if not token or not name:
-        return res.json({"ok": False, "errore": "Accensione non ancora configurata."}, 503)
+        mancano = [n for n, v in (("GH_TOKEN", token), ("EG_CODESPACE", name)) if not v]   # solo i NOMI
+        context.error("variabili vuote: %s" % ", ".join(mancano))
+        return res.json({"ok": False, "errore": "Accensione non ancora configurata (manca %s)." % ", ".join(mancano)}, 503)
     gh = {"Authorization": "Bearer " + token, "Accept": "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "EMAGIAKU-accendi"}
     code, cs = _http("GET", "%s/user/codespaces/%s" % (GITHUB, name), gh)
