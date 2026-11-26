@@ -6,6 +6,7 @@ const EG = {
   project: "6af5ebe90008bba8da64",
   cookieKey: "a_session_6af5ebe90008bba8da64",
 };
+window.EG = EG;      // anche per i moduli (cloud.js usa window.EG per Accendi e per il rinnovo dell'accesso)
 
 EG.errors = {
   user_invalid_credentials: "Email o password sbagliate.",
