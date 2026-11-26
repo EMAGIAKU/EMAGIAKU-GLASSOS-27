@@ -176,3 +176,70 @@ EG.pwToggles = () => {
 };
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", EG.pwToggles);
 else EG.pwToggles();
+// 27.30: accesso con il QR nelle app (EG Remoto, EG GLASS PHONE, EG PLAY CLOUD), come su EMAGIAKU GLASS OS.
+// Questo schermo mostra un QR; il telefono lo inquadra (pagina accedi.html), sblocca la passkey e lascia nella
+// "casella" qrlogin il gettone di accesso cifrato con AES-GCM. La chiave sta solo nel QR (dopo '#').
+EG.SITE = "https://emagiaku.github.io/EMAGIAKU-GLASSOS-27/";
+EG.qrLogin = (box) => {
+  const row = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
+  const keyRaw = crypto.getRandomValues(new Uint8Array(32));
+  const link = EG.SITE + "accedi.html#r=" + row + "&k=" + EG.b64u(keyRaw);
+  const img = EG.endpoint + "/avatars/qr?" + new URLSearchParams({ text: link, size: 260, margin: 1, project: EG.project });
+  box.textContent = "";
+  box.hidden = false;
+  const im = document.createElement("img");
+  im.className = "qr-img";
+  im.alt = "QR per entrare con il telefono";
+  im.src = img;
+  const p = document.createElement("p");
+  p.className = "small";
+  p.textContent = "Inquadra il QR con la fotocamera del telefono e sblocca la passkey EMAGIAKU: qui entri da solo. " +
+    "(Prima volta? Sul telefono ti chiede di creare la passkey.)";
+  const stop = document.createElement("button");
+  stop.type = "button";
+  stop.className = "alt";
+  stop.textContent = "Annulla";
+  box.append(im, p, stop);
+  let fine = false;
+  stop.onclick = () => { fine = true; box.hidden = true; box.textContent = ""; };
+  const t0 = Date.now();
+  const giro = async () => {
+    if (fine) return;
+    if (Date.now() - t0 > 5 * 60 * 1000) { p.textContent = "QR scaduto: premi di nuovo \"Accedi con il QR\"."; im.remove(); return; }
+    let r = null;
+    try { r = await EG.call("GET", "/tablesdb/emagiaku/tables/qrlogin/rows/" + row); } catch (e) { /* non ancora */ }
+    if (!r || !r.data) { setTimeout(giro, 2500); return; }
+    fine = true;
+    try { await EG.call("DELETE", "/tablesdb/emagiaku/tables/qrlogin/rows/" + row); } catch (e) { /* gia' tolta */ }
+    try {
+      const blob = EG.ub64(r.data);
+      const key = await crypto.subtle.importKey("raw", keyRaw, "AES-GCM", false, ["decrypt"]);
+      const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: blob.slice(0, 12) }, key, blob.slice(12));
+      const tok = JSON.parse(new TextDecoder().decode(plain));
+      p.textContent = "Entro...";
+      await EG.logoutLocal();
+      await EG.call("POST", "/account/sessions/token", { userId: tok.u, secret: tok.s });
+      location.reload();                       // l'app riparte gia' dentro l'account
+    } catch (e) {
+      p.textContent = "Accesso non riuscito: riprova con un QR nuovo.";
+    }
+  };
+  setTimeout(giro, 2500);
+};
+EG.qrButton = () => {
+  const login = EG.$("login"), pk = EG.$("b_passkey");
+  if (!login || !pk || EG.$("b_qr") || !window.crypto || !crypto.subtle) return;
+  const b = document.createElement("button");
+  b.id = "b_qr";
+  b.type = "button";
+  b.className = "alt";
+  b.textContent = "📱 Accedi con il QR (dal telefono)";
+  const box = document.createElement("div");
+  box.id = "qr_box";
+  box.className = "qr-box";
+  box.hidden = true;
+  pk.after(b, box);
+  b.onclick = () => EG.qrLogin(box);
+};
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", EG.qrButton);
+else EG.qrButton();
