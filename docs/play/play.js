@@ -10,16 +10,16 @@ const PIANI = [
   { id: "free", nome: "FREE", prezzo: "Gratis", per: "Per provare: gioca i giochi dei tuoi account senza scaricarli.",
     cose: ["5 ore di cloud al mese", "I giochi dei tuoi account (Steam, Epic, EA, Ubisoft...)", "Fino a 1080p, coda standard",
       "Telefono, PC, tablet e TV"] },
-  { id: "plus", nome: "PLUS", prezzo: "5,99 € / mese", per: "Per chi vuole giocare in cloud senza avere un PC potente.",
+  { id: "plus", nome: "PLUS", prezzo: "2,99 € / mese", per: "Per chi vuole giocare in cloud senza avere un PC potente.",
     cose: ["20 ore di cloud al mese", "Tutto quello di FREE", "Fino a 1080p 60 FPS", "Sessioni fino a 2 ore"] },
-  { id: "pro", nome: "PRO", prezzo: "11,99 € / mese", per: "Per chi vuole un'esperienza gaming più fluida.",
+  { id: "pro", nome: "PRO", prezzo: "5,99 € / mese", per: "Per chi vuole un'esperienza gaming più fluida.",
     cose: ["50 ore di cloud al mese", "Fino a 1440p", "PC cloud più potente, FPS più alti", "Sessioni fino a 4 ore",
       "Priorità nelle code", "Salvataggi cloud"],
     nota: "2 mesi inclusi con EG GLASS OS PRO" },
-  { id: "ultra", nome: "ULTRA", prezzo: "19,99 € / mese", per: "Per chi vuole il massimo delle prestazioni.",
+  { id: "ultra", nome: "ULTRA", prezzo: "9,99 € / mese", per: "Per chi vuole il massimo delle prestazioni.",
     cose: ["100 ore di cloud al mese", "Fino a 4K e 120 FPS, dove supportati", "PC cloud di fascia alta",
       "Sessioni fino a 10 ore", "Accesso prioritario ai server", "Impostazioni grafiche avanzate"],
-    nota: "Con EG GLASS OS PRO: 5 € al mese durante i 2 mesi inclusi" },
+    nota: "Con EG GLASS OS PRO: 2,50 € al mese durante i 2 mesi inclusi" },
 ];
 
 function view(which) {

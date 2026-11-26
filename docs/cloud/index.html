@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#120c1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EG CLOUD">
+<meta name="description" content="EG CLOUD: i tuoi giochi e i sistemi EMAGIAKU online, su telefono, tablet e PC.">
+<title>EG CLOUD</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="../eg.css">
+<link rel="stylesheet" href="../phone/phone.css">
+<link rel="stylesheet" href="cloud.css"></head>
+<body data-app="cloud">
+<main id="ui">
+  <div class="brand accesso"><img class="appicon" src="icon-192.png" alt=""><div><b>EG CLOUD</b><span>I tuoi giochi e i sistemi EMAGIAKU online</span></div></div>
+  <div id="msg" class="msg" hidden></div>
+
+  <section id="login" class="card" hidden>
+    <h1>Accedi</h1>
+    <p>Con il tuo Account EMAGIAKU (lo stesso del PC, di EG Remoto e di EG PLAY).</p>
+    <button id="b_passkey">Accedi con la passkey</button>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" inputmode="email">
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <button id="b_login" class="alt">Accedi con email e password</button>
+    <button id="b_go_signup" class="alt">Non hai un account? Crealo</button>
+  </section>
+
+  <section id="signup" class="card" hidden>
+    <h1>Crea l'Account EMAGIAKU</h1>
+    <label for="s_name">Nome (facoltativo)</label>
+    <input id="s_name" autocomplete="name" maxlength="128">
+    <label for="s_email">Email</label>
+    <input id="s_email" type="email" autocomplete="username" inputmode="email">
+    <label for="s_pw">Password</label>
+    <input id="s_pw" type="password" autocomplete="new-password">
+    <label for="s_pw2">Ripeti la password</label>
+    <input id="s_pw2" type="password" autocomplete="new-password">
+    <p class="small">Almeno 8 caratteri, con lettere e numeri.</p>
+    <button id="b_signup">Crea account</button>
+    <button id="b_go_login" class="alt">Ho gia' un account</button>
+  </section>
+
+  <section id="verify" class="card" hidden>
+    <h1>Conferma la tua email</h1>
+    <p id="v_text">Ti abbiamo mandato un codice di 6 cifre.</p>
+    <input id="v_code" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+    <button id="b_verify">Conferma</button>
+    <button id="b_verify_again" class="alt">Mandami un altro codice</button>
+  </section>
+
+  <section id="mfa" class="card" hidden>
+    <h1>Verifica in due passaggi</h1>
+    <p>Scrivi il codice dell'app di autenticazione (o un codice di recupero).</p>
+    <input id="code" inputmode="numeric" autocomplete="one-time-code">
+    <button id="b_mfa">Conferma</button>
+    <button id="b_mfa_out" class="alt">Annulla</button>
+  </section>
+
+  <!-- ========== interfaccia EG CLOUD (dopo l'accesso) ========== -->
+  <section id="home" hidden>
+    <header class="cl-top">
+      <div class="cl-pill" title="EG CLOUD"><span class="cl-eg">EG</span><span class="cl-tag">CLOUD</span></div>
+      <nav class="cl-nav cl-nav-top" aria-label="Sezioni">
+        <button data-tab="home" class="sel" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></button>
+        <button data-tab="lib" aria-label="Libreria"><svg viewBox="0 0 24 24"><path d="M4 4h3v16H4zM9.5 4h3v16h-3zM15 5.2l2.9-.8 3.6 15.4-2.9.8z"/></svg></button>
+        <button data-tab="cerca" aria-label="Cerca"><svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg></button>
+      </nav>
+      <div class="cl-destra">
+        <button id="b_sistemi" class="cl-ico" aria-label="Sistemi online"><svg viewBox="0 0 24 24"><path d="M3 4h18a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-7v2h3v2H7v-2h3v-2H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm1 2v9h16V6z"/></svg><i id="sist_dot"></i></button>
+        <button id="b_profilo" class="cl-avatar" aria-label="Profilo">EG</button>
+      </div>
+    </header>
+
+    <div id="t_home" class="cl-tab">
+      <div class="cl-hero"><h1 id="ciao">Ciao!</h1><p id="ciao_sub">I tuoi giochi e i sistemi EMAGIAKU online.</p></div>
+      <h2 class="cl-riga">Riprendi a giocare</h2>
+      <div id="recenti" class="cl-scorri"></div>
+      <h2 class="cl-riga">Sistemi online</h2>
+      <div class="cl-sistemi">
+        <button class="cl-sis" data-os="glass"><b>EMAGIAKU GLASS OS</b><span>Il desktop EMAGIAKU, ovunque</span></button>
+        <button class="cl-sis play" data-os="play"><b>🎮 EG PLAY OS</b><span>La console EMAGIAKU, col controller</span></button>
+      </div>
+      <h2 class="cl-riga">Account di gioco</h2>
+      <div id="negozi" class="cl-chips"></div>
+    </div>
+
+    <div id="t_lib" class="cl-tab" hidden>
+      <div class="cl-seg"><button data-l="recenti" class="sel">Usati di recente</button><button data-l="tutti">I miei giochi</button></div>
+      <div id="lib_filtri" class="cl-chips" hidden></div>
+      <div class="cl-barra"><select id="ordine" aria-label="Ordine"><option value="alfa">Ordine alfabetico</option>
+        <option value="recenti">Ultima partita</option><option value="negozio">Negozio</option></select><span id="lib_n"></span></div>
+      <div id="lib"></div>
+    </div>
+
+    <div id="t_cerca" class="cl-tab" hidden>
+      <input id="q" type="search" placeholder="Cerca nei tuoi giochi" autocomplete="off" aria-label="Cerca">
+      <div id="cerca_ris" class="cl-griglia"></div>
+    </div>
+
+    <nav class="cl-nav cl-nav-bassa" aria-label="Sezioni">
+      <button data-tab="home" class="sel" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></button>
+      <button data-tab="lib" aria-label="Libreria"><svg viewBox="0 0 24 24"><path d="M4 4h3v16H4zM9.5 4h3v16h-3zM15 5.2l2.9-.8 3.6 15.4-2.9.8z"/></svg></button>
+      <button data-tab="cerca" aria-label="Cerca"><svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg></button>
+    </nav>
+
+    <!-- pannello laterale: profilo e sistemi online -->
+    <div id="velo" hidden></div>
+    <aside id="pannello" hidden>
+      <button id="p_chiudi" class="cl-ico" aria-label="Chiudi">‹</button>
+      <div class="cl-prof"><div id="p_avatar" class="cl-avatar grande">EG</div>
+        <div><b id="p_nome"></b><span id="p_badge" class="cl-badge" hidden></span></div></div>
+      <h3>Sistema online</h3>
+      <div id="scegli" class="scegli"><button data-os="glass" class="alt">EMAGIAKU GLASS OS</button><button data-os="play" class="alt">🎮 EG PLAY OS</button></div>
+      <div class="status"><div id="dot" class="dot"></div><div><b id="st_title">Controllo...</b><span id="st_text"></span></div></div>
+      <div id="ore" class="ore" hidden><div class="ore-t"><b></b> <span></span></div><div class="ore-bar"><i></i></div></div>
+      <button id="b_open">Apri EMAGIAKU GLASS OS</button>
+      <button id="b_on" class="alt" hidden>Accendi (si apre GitHub)</button>
+      <a class="cl-link" href="../play/">Collega account di gioco e piani EG PLAY CLOUD <span>›</span></a>
+      <p class="small" id="who"></p>
+      <button id="b_out" class="alt">Esci dall'account</button>
+    </aside>
+
+    <!-- scheda di un gioco -->
+    <div id="gioco" class="cl-gioco" hidden>
+      <div class="cl-gioco-box">
+        <button id="g_chiudi" class="cl-ico" aria-label="Chiudi">✕</button>
+        <div id="g_cop" class="cl-cop grande"></div>
+        <div class="cl-gioco-testo"><b id="g_nome"></b><span id="g_info"></span>
+          <p class="small" id="g_nota"></p>
+          <button id="g_play">Apri EG PLAY OS online</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="install" class="card" hidden>
+    <h2>Installa EG CLOUD</h2>
+    <p id="install_text" class="small"></p>
+    <button id="b_install" hidden>Installa</button>
+  </section>
+  <footer>EMAGIAKU GLASS OS · Developed by EMAGIAKU.TEAM<br>
+    <a href="https://github.com/EMAGIAKU/EMAGIAKU-GLASSOS-27/blob/main/PRIVACY.md">Privacy</a></footer>
+</main>
+
+<!-- il sistema a tutto schermo -->
+<div id="os" hidden>
+  <div id="screen"></div>
+  <div id="status"></div>
+  <div id="turn" hidden>Gira il telefono per vederlo piu' grande <button id="b_turn_ok">Ok</button></div>
+  <input id="kbd" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Tastiera">
+  <button id="bubble" aria-label="Menu EG CLOUD">EG</button>
+  <div id="menu" hidden>
+    <button data-act="kbd">⌨ Tastiera</button>
+    <button data-act="start">EG Menu Start</button>
+    <button data-act="play" id="m_play" hidden>🎮 Apri EG PLAY</button>
+    <button data-act="esc">Esc</button>
+    <button data-act="enter">Invio</button>
+    <button data-act="full">⛶ Schermo intero</button>
+    <button data-act="again">↻ Ricollega</button>
+    <button data-act="quit" class="quit">✕ Esci</button>
+  </div>
+</div>
+<script src="../eg.js"></script><script src="cloud-ui.js"></script><script src="../phone/phone.js"></script>
+<script type="module" src="../remoto/cloud.js"></script>
+</body>
+</html>

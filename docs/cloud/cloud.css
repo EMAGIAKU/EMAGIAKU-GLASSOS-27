@@ -1,0 +1,151 @@
+/* EG CLOUD (27.30): interfaccia da console, viola EMAGIAKU. L'accesso usa lo stile di EG GLASS PHONE. */
+[hidden] { display: none !important; }
+
+/* scelta del sistema online (nel pannello) */
+.scegli { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; margin: 0 0 14px;
+          border-radius: 14px; background: #1a1230; border: 1px solid var(--line); }
+.scegli button { margin: 0; padding: 10px 6px; font-size: 14px; border: 0; background: transparent; }
+.scegli button.sel { background: var(--accent); color: #fff; }
+
+/* ---------- dopo l'accesso: a tutta larghezza ---------- */
+body.in-home { display: block; padding: 0;
+  background: radial-gradient(120% 60% at 50% -10%, #4a2a8a 0, #241445 35%, #0d0916 75%) fixed, #0d0916; }
+body.in-home main { max-width: none; }
+body.in-home .brand.accesso, body.in-home > main > footer { display: none; }
+body.in-home #msg { position: fixed; z-index: 40; left: 16px; right: 16px; top: max(12px, env(safe-area-inset-top));
+                    max-width: 560px; margin: 0 auto; }
+body.in-home #install { max-width: 560px; margin: 8px auto 120px; }
+#home { padding: max(14px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 120px max(16px, env(safe-area-inset-left));
+        max-width: 1500px; margin: 0 auto; }
+
+/* barra in alto */
+.cl-top { position: relative; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.cl-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px;
+           border: 2px solid rgba(201, 164, 255, .35); background: rgba(29, 20, 48, .6); }
+.cl-eg { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 900;
+         letter-spacing: -1px; color: #fff; background: linear-gradient(135deg, #b07cff, #4b1fb0); font-size: 15px; }
+.cl-tag { font-weight: 800; letter-spacing: 2px; font-size: 13px; color: var(--accent2); }
+.cl-destra { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.cl-ico { width: 44px; height: 44px; margin: 0; padding: 9px; border-radius: 50%; background: transparent; position: relative;
+          border: 0; color: var(--text); font-size: 22px; line-height: 1; }
+.cl-ico svg { width: 26px; height: 26px; fill: currentColor; }
+.cl-ico i { position: absolute; right: 6px; bottom: 6px; width: 10px; height: 10px; border-radius: 50%; background: #555;
+            border: 2px solid #0d0916; }
+.cl-ico i.on { background: var(--ok); }
+.cl-ico i.off { background: var(--bad); }
+.cl-avatar { width: 44px; height: 44px; margin: 0; padding: 0; border-radius: 50%; font-weight: 900; font-size: 15px;
+             background: linear-gradient(135deg, #c9a4ff, #6a2fe0); border: 2px solid rgba(255, 255, 255, .25); color: #fff; }
+.cl-avatar.grande { width: 84px; height: 84px; font-size: 28px; display: grid; place-items: center; flex: none; }
+
+/* navigazione: in alto su schermi larghi, pillola in basso sul telefono in verticale */
+.cl-nav { display: flex; gap: 6px; }
+.cl-nav button { width: 64px; height: 52px; margin: 0; padding: 12px; border-radius: 16px; background: transparent; color: var(--muted); }
+.cl-nav button svg { width: 28px; height: 28px; fill: currentColor; }
+.cl-nav button.sel { color: #fff; }
+.cl-nav-top { position: absolute; left: 50%; transform: translateX(-50%); }
+.cl-nav-bassa { position: fixed; z-index: 30; left: 16px; right: 16px; bottom: max(14px, env(safe-area-inset-bottom));
+                justify-content: space-around; padding: 8px; border-radius: 999px; max-width: 520px; margin: 0 auto;
+                background: rgba(29, 20, 48, .82); border: 1px solid var(--line); backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0, 0, 0, .5); }
+.cl-nav-bassa button.sel { background: rgba(138, 79, 255, .35); }
+@media (min-width: 760px) { .cl-nav-bassa { display: none; } #home { padding-bottom: 40px; } }
+@media (max-width: 759px) { .cl-nav-top { display: none; } }
+
+/* Home */
+.cl-hero { padding: 7vh 4px 3vh; }
+.cl-hero h1 { font-size: clamp(26px, 4vw, 40px); margin: 0; }
+.cl-hero p { margin: 4px 0 0; }
+.cl-riga { color: var(--text); font-size: clamp(20px, 2.6vw, 30px); margin: 22px 4px 12px; font-weight: 700; }
+.cl-scorri { display: flex; gap: 16px; overflow-x: auto; padding: 4px 4px 12px; scroll-snap-type: x mandatory;
+             scrollbar-width: thin; }
+.cl-scorri > * { scroll-snap-align: start; flex: none; }
+
+/* copertine */
+.cl-cop { position: relative; width: 150px; aspect-ratio: 2 / 3; border-radius: 16px; overflow: hidden; cursor: pointer;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, .4); outline-offset: 3px; flex: none; }
+.cl-cop.grande { width: clamp(170px, 22vw, 260px); }
+.cl-cop:focus-visible { outline: 3px solid var(--accent2); }
+.cl-cop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cl-cop img.orizz { object-fit: cover; object-position: center; }
+.cl-cop-nome { position: absolute; inset: auto 10px 34px; font-weight: 800; font-size: 15px; line-height: 1.2; color: #fff;
+               text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+.cl-cop.con-img .cl-cop-nome { display: none; }
+.cl-cop-badge { position: absolute; left: 8px; bottom: 8px; max-width: calc(100% - 16px); padding: 3px 8px; border-radius: 8px;
+                font-style: normal; font-size: 11px; font-weight: 800; color: #fff; background: rgba(13, 9, 22, .75);
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* come si gioca: controller e/o dito, piccoli in basso a destra sulla copertina */
+.cl-comandi { position: absolute; right: 8px; bottom: 8px; display: flex; gap: 4px; }
+.cl-comandi svg { width: 26px; height: 26px; padding: 4px; border-radius: 8px; fill: #fff; background: rgba(13, 9, 22, .75); }
+.cl-cop:has(.cl-comandi) .cl-cop-badge { max-width: calc(100% - 82px); }
+.cl-riga-gioco .cl-comandi svg { width: 22px; height: 22px; padding: 3px; }
+.cl-mosaico .cl-comandi { display: none; }
+.cl-mosaico { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; width: clamp(170px, 22vw, 260px); aspect-ratio: 2 / 3;
+              margin: 0; padding: 10px; border-radius: 18px; background: rgba(29, 20, 48, .8); border: 1px solid var(--line); }
+.cl-mosaico .cl-cop { width: 100%; height: 100%; aspect-ratio: auto; border-radius: 10px; box-shadow: none; }
+.cl-mosaico .cl-cop-badge, .cl-mosaico .cl-cop-nome { display: none; }
+
+/* sistemi online */
+.cl-sistemi { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; padding: 0 4px; }
+.cl-sis { margin: 0; text-align: left; padding: 22px; border-radius: 20px; min-height: 120px;
+          background: linear-gradient(135deg, #3b1c7a, #8a4fff); border: 1px solid rgba(255, 255, 255, .15); }
+.cl-sis.play { background: linear-gradient(135deg, #2b0f5c, #c03cff); }
+.cl-sis b { display: block; font-size: 19px; }
+.cl-sis span { font-weight: 500; font-size: 14px; opacity: .85; }
+
+/* chip */
+.cl-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 4px; }
+.cl-chip { width: auto; margin: 0; padding: 9px 16px; border-radius: 999px; font-size: 15px; font-weight: 700;
+           background: rgba(29, 20, 48, .8); border: 1px solid var(--line); color: var(--muted); text-decoration: none; }
+.cl-chip.ok { color: var(--ok); }
+.cl-chip.sel { background: #fff; color: #1a1030; border-color: #fff; }
+.cl-vuoto { padding: 22px; border-radius: 18px; border: 1px dashed var(--line); max-width: 520px; background: rgba(29, 20, 48, .5); }
+.cl-vuoto b { display: block; font-size: 17px; }
+.cl-vuoto span { display: block; color: var(--muted); font-size: 14px; margin: 4px 0 10px; }
+
+/* Libreria */
+.cl-seg { display: flex; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(29, 20, 48, .8);
+          border: 1px solid var(--line); margin: 18px 0 16px; }
+.cl-seg button { flex: 0 1 auto; width: auto; margin: 0; padding: 11px 22px; border-radius: 999px; background: transparent;
+                 color: var(--muted); white-space: nowrap; }
+@media (max-width: 420px) { .cl-seg button { flex: 1; padding: 11px 8px; font-size: 15px; } }
+.cl-seg button.sel { background: rgba(138, 79, 255, .45); color: #fff; }
+.cl-barra { display: flex; align-items: center; gap: 12px; margin: 14px 4px; }
+.cl-barra select { padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line); background: #1a1230;
+                   color: var(--text); font-size: 15px; }
+.cl-barra span { margin-left: auto; color: var(--muted); }
+.cl-griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; padding: 0 4px; }
+.cl-griglia .cl-cop { width: 100%; }
+.cl-lista h3 { color: var(--muted); font-weight: 600; margin: 18px 4px 8px; }
+.cl-riga-gioco { display: flex; align-items: center; gap: 16px; padding: 8px 4px; cursor: pointer; border-radius: 14px; }
+.cl-riga-gioco:hover { background: rgba(138, 79, 255, .12); }
+.cl-riga-gioco .cl-cop { width: 84px; aspect-ratio: 1; border-radius: 12px; }
+.cl-riga-gioco .cl-cop-badge, .cl-riga-gioco .cl-cop-nome { display: none; }
+.cl-riga-gioco b { display: block; font-size: 18px; }
+.cl-riga-gioco span { color: var(--muted); }
+#q { margin: 18px 0; border-radius: 999px; padding: 14px 20px; font-size: 17px; }
+
+/* pannello profilo / sistemi */
+#velo { position: fixed; inset: 0; z-index: 35; background: rgba(0, 0, 0, .5); }
+#pannello { position: fixed; z-index: 36; top: 0; right: 0; bottom: 0; width: min(440px, 100vw); overflow: auto;
+            padding: max(16px, env(safe-area-inset-top)) 20px 30px; background: rgba(20, 13, 34, .97);
+            border-left: 1px solid var(--line); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+#pannello h3 { margin: 22px 0 10px; color: var(--accent2); font-size: 15px; letter-spacing: .5px; }
+.cl-prof { display: flex; align-items: center; gap: 16px; margin-top: 6px; }
+.cl-prof b { display: block; font-size: 20px; word-break: break-word; }
+.cl-badge { display: inline-block; margin-top: 6px; padding: 2px 10px; border-radius: 6px; background: #fff; color: #1a1030;
+            font-weight: 900; letter-spacing: 1px; font-size: 14px; }
+.cl-link { display: flex; justify-content: space-between; align-items: center; padding: 16px 2px; margin-top: 10px;
+           border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--text); text-decoration: none;
+           font-size: 16px; }
+.cl-link span { font-size: 22px; color: var(--muted); }
+
+/* scheda del gioco */
+.cl-gioco { position: fixed; inset: 0; z-index: 38; display: grid; place-items: center; padding: 16px; background: rgba(0, 0, 0, .6); }
+.cl-gioco-box { position: relative; display: flex; gap: 20px; align-items: flex-end; max-width: 720px; width: 100%; padding: 20px;
+                border-radius: 22px; background: #1d1430; border: 1px solid var(--line); }
+.cl-gioco-box #g_chiudi { position: absolute; top: 8px; right: 8px; }
+.cl-gioco-testo b { display: block; font-size: 22px; margin-right: 40px; }
+.cl-gioco-testo > span { color: var(--muted); }
+.cl-gioco-testo p { margin-top: 12px; }
+@media (max-width: 560px) { .cl-gioco-box { flex-direction: column; align-items: stretch; }
+  .cl-gioco-box .cl-cop.grande { width: 140px; align-self: center; } }

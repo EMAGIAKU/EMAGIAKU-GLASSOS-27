@@ -3,20 +3,47 @@
 "use strict";
 let ME = null, SYS = null, OPEN = false;
 // 27.27: con ?os=play e' "EG PLAY OS online" (app EG PLAY CLOUD): stesso sistema online, si apre EG PLAY a tutto schermo
-const PLAY = new URLSearchParams(location.search).get("os") === "play";
-const NOME = PLAY ? "EG PLAY OS" : "EMAGIAKU GLASS OS";
-if (PLAY) {        // testi della pagina per EG PLAY OS online
-  document.title = "EG PLAY OS online";
-  const b = document.querySelector(".brand b"), s = document.querySelector(".brand span");
-  if (b) b.textContent = "EG PLAY OS online";
-  if (s) s.textContent = "EG PLAY OS sul telefono, senza console: dall'app EG PLAY CLOUD";
-  document.getElementById("b_open").textContent = "Apri EG PLAY OS";
-  document.getElementById("m_play").hidden = false;
+// 27.30: lo stesso codice e' anche l'app EG CLOUD (../cloud/, <body data-app="cloud">): tutti i sistemi online in
+// un'app sola, scegli EMAGIAKU GLASS OS o EG PLAY OS in alto (la scelta resta salvata su questo dispositivo).
+const CLOUD = document.body.dataset.app === "cloud";
+const APP = CLOUD ? "EG CLOUD" : "EG GLASS PHONE";
+let PLAY = new URLSearchParams(location.search).get("os") === "play";
+if (CLOUD && !new URLSearchParams(location.search).get("os")) {
+  try { PLAY = localStorage.getItem("eg_cloud_os") === "play"; } catch (e) { /* niente memoria */ }
+}
+let NOME = "";
+window.EGPhone = { setOS: (p) => setOS(p), open: () => { sessionStorage.removeItem("eg_phone_closed"); openOS(); },
+                   isPlay: () => PLAY, refresh: () => { if (ME) home(false); } };
+function setOS(play) {
+  PLAY = play;
+  NOME = PLAY ? "EG PLAY OS" : "EMAGIAKU GLASS OS";
+  document.getElementById("b_open").textContent = "Apri " + NOME;
+  document.getElementById("m_play").hidden = !PLAY;
+  if (CLOUD) {
+    document.querySelectorAll("#scegli button").forEach((b) => b.classList.toggle("sel", (b.dataset.os === "play") === PLAY));
+    try { localStorage.setItem("eg_cloud_os", PLAY ? "play" : "glass"); } catch (e) { /* niente memoria */ }
+  } else if (PLAY) {        // testi della pagina per EG PLAY OS online
+    document.title = "EG PLAY OS online";
+    const b = document.querySelector(".brand b"), s = document.querySelector(".brand span");
+    if (b) b.textContent = "EG PLAY OS online";
+    if (s) s.textContent = "EG PLAY OS sul telefono, senza console: dall'app EG PLAY CLOUD";
+  }
+}
+setOS(PLAY);
+if (CLOUD) {
+  document.getElementById("scegli").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || (b.dataset.os === "play") === PLAY) return;
+    setOS(b.dataset.os === "play");
+    sessionStorage.removeItem("eg_phone_closed");
+    if (ME) home(false);
+  });
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function view(which) {
   ["login", "signup", "verify", "mfa", "home"].forEach((s) => EG.show(s, s === which));
+  document.body.classList.toggle("in-home", which === "home");      // EG CLOUD: interfaccia a tutta larghezza
   showInstall(which === "home");
 }
 
@@ -150,6 +177,7 @@ async function isOn(c) {
 async function home(autoOpen = true) {
   view("home");
   EG.$("who").textContent = "Account: " + ME.email;
+  if (CLOUD && window.EGCloudHome) window.EGCloudHome(ME);     // EG CLOUD: Home, Libreria e Cerca (cloud/cloud-ui.js)
   const dot = EG.$("dot");
   dot.className = "dot";
   EG.$("st_title").textContent = "Controllo " + NOME + "...";
@@ -176,7 +204,7 @@ async function home(autoOpen = true) {
     EG.$("st_text").textContent = (LAST && LAST.postazioni ? "Postazioni libere: " + LAST.libere + " di " +
       LAST.postazioni + ". " : "") + "Si apre a tutto schermo; tocca il pallino EG per tastiera e menu. Quando esci, " +
       "dopo un minuto e mezzo la tua postazione viene ripulita (file e account cancellati).";
-    if (autoOpen && !sessionStorage.getItem("eg_phone_closed")) openOS();
+    if (autoOpen && !CLOUD && !sessionStorage.getItem("eg_phone_closed")) openOS();   // EG CLOUD: resta sulla Home
   } else {
     dot.classList.add("off");
     EG.$("st_title").textContent = "" + NOME + " e' spento";
@@ -303,7 +331,7 @@ function showInstall(on) {
     window.matchMedia("(display-mode: fullscreen)").matches || navigator.standalone;
   if (standalone || !on) { EG.show("install", false); return; }
   const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  EG.$("install_text").textContent = installEvt ? "Installala: avrai l'icona EG GLASS PHONE e si apre a tutto schermo." :
+  EG.$("install_text").textContent = installEvt ? "Installala: avrai l'icona " + APP + " e si apre a tutto schermo." :
     ios ? "Su iPhone: in Safari tocca Condividi e poi \"Aggiungi alla schermata Home\"." :
     "Dal menu del browser scegli \"Installa app\" o \"Aggiungi a schermata Home\".";
   EG.show("b_install", !!installEvt);
